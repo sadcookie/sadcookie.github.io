@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EDF1F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1518" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="아기 기록">
+<meta name="description" content="수유·기저귀·수면을 두 번의 탭으로 남기고 마지막 기록 이후 경과 시간을 보는 신생아 기록장.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%8D%BC%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light dark;
+}
+body{ margin:0; }
+img{ max-width:100%; }
+[hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+<title>마지막 수유 언제였지</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#EDF1F0; --surface:#FFFFFF; --surface-2:#F5F8F7; --line:#DBE3E2;
+  --ink:#0F191C; --ink-2:#44565B; --muted:#77898E;
+  --feed:#C9821C; --diaper:#2F8F88; --sleep:#5E68B8; --alert:#C2472F;
+  --feed-soft:rgba(201,130,28,.12); --diaper-soft:rgba(47,143,136,.12); --sleep-soft:rgba(94,104,184,.12);
+  --shadow:0 1px 2px rgba(15,25,28,.05), 0 6px 20px rgba(15,25,28,.05);
+  --r:14px; --bar:84px;
+  --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1518; --surface:#172126; --surface-2:#1C282E; --line:#26343A;
+    --ink:#E7EEEC; --ink-2:#AEC0C3; --muted:#7B8F95;
+    --feed:#E9A23B; --diaper:#4EA5A0; --sleep:#868FD6; --alert:#E0725A;
+    --feed-soft:rgba(233,162,59,.14); --diaper-soft:rgba(78,165,160,.14); --sleep-soft:rgba(134,143,214,.14);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1518; --surface:#172126; --surface-2:#1C282E; --line:#26343A;
+  --ink:#E7EEEC; --ink-2:#AEC0C3; --muted:#7B8F95;
+  --feed:#E9A23B; --diaper:#4EA5A0; --sleep:#868FD6; --alert:#E0725A;
+  --feed-soft:rgba(233,162,59,.14); --diaper-soft:rgba(78,165,160,.14); --sleep-soft:rgba(134,143,214,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:560px; margin:0 auto; padding-inline:16px;
+  padding-bottom:calc(var(--bar) + 24px + env(safe-area-inset-bottom, 0px));
+}
+button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
+input{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--feed); outline-offset:2px; border-radius:6px}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+.top{
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:5;
+  background:var(--bg); padding-block:14px 10px;
+  display:flex; align-items:center; gap:10px;
+}
+.top-id{flex:1; min-width:0}
+.top-name{
+  display:flex; align-items:baseline; gap:8px; width:100%;
+  text-align:left; padding:0;
+}
+.top-name b{font-size:17px; font-weight:700; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.dplus{
+  font-family:var(--mono); font-size:12px; font-weight:600; color:var(--feed);
+  background:var(--feed-soft); padding:2px 7px; border-radius:20px; white-space:nowrap;
+}
+.top-date{font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-top:1px}
+.nav{display:flex; gap:4px}
+.nav button{
+  width:34px; height:34px; border-radius:10px; border:1px solid var(--line);
+  background:var(--surface); color:var(--ink-2); display:grid; place-items:center;
+}
+.nav button[disabled]{opacity:.35; cursor:default}
+
+.tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px}
+.tile{
+  background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow);
+  padding:12px 12px 11px; border-left:3px solid var(--line); min-width:0;
+}
+.tile-k{
+  font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.06em;
+  display:block; margin-bottom:5px;
+}
+.tile-v{font-family:var(--mono); font-size:21px; font-weight:600; letter-spacing:-.02em; line-height:1.1}
+.tile-v small{font-size:12px; font-weight:400; letter-spacing:0; margin-left:1px}
+.tile-s{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.tile.none .tile-v{color:var(--muted); font-size:15px; font-weight:400; padding-block:3px}
+.tile.t-feed{border-left-color:var(--feed)}
+.tile.t-diaper{border-left-color:var(--diaper)}
+.tile.t-sleep{border-left-color:var(--sleep)}
+.tile.warn{border-left-color:var(--alert)}
+.tile.warn .tile-v{color:var(--alert)}
+.tile.live .tile-v{color:var(--sleep)}
+
+.sum{
+  background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow);
+  padding:13px 14px; margin-bottom:14px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(78px,1fr)); gap:12px 8px;
+}
+.sum-i{min-width:0}
+.sum-k{font-size:11px; color:var(--muted); display:block; margin-bottom:2px}
+.sum-v{font-family:var(--mono); font-size:17px; font-weight:600; letter-spacing:-.02em}
+.sum-v span{font-size:11.5px; font-weight:400; color:var(--muted); margin-left:2px}
+.pips{display:flex; gap:3px; margin-top:5px}
+.pip{width:100%; height:3px; border-radius:2px; background:var(--line)}
+.pip.on{background:var(--diaper)}
+.sum-note{
+  grid-column:1/-1; font-size:11.5px; color:var(--muted); line-height:1.5;
+  border-top:1px solid var(--line); padding-top:9px; margin-top:1px;
+}
+
+.log-h{
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin:0 2px 8px; font-size:12px; color:var(--muted);
+}
+.log-h b{font-size:13px; font-weight:500; color:var(--ink-2)}
+.log{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px}
+.row{
+  display:grid; grid-template-columns:52px 12px 1fr auto; align-items:start; gap:10px;
+  background:var(--surface); padding:11px 12px 11px 13px;
+}
+.log li:first-child .row{border-radius:var(--r) var(--r) 0 0}
+.log li:last-child .row{border-radius:0 0 var(--r) var(--r)}
+.log li:only-child .row{border-radius:var(--r)}
+.r-t{font-family:var(--mono); font-size:13.5px; color:var(--ink-2); padding-top:1px}
+.r-d{width:9px; height:9px; border-radius:50%; margin-top:6px}
+.r-d.k-feed{background:var(--feed)}
+.r-d.k-diaper{background:var(--diaper)}
+.r-d.k-sleep{background:var(--sleep)}
+.r-d.k-etc{background:var(--muted)}
+.r-b{min-width:0}
+.r-l{font-size:14px; font-weight:500}
+.r-s{font-size:12.5px; color:var(--muted); font-family:var(--mono); margin-top:1px; overflow-wrap:anywhere}
+.r-s.flag{color:var(--alert); font-family:var(--sans)}
+.r-x{color:var(--muted); font-size:16px; line-height:1; padding:5px 2px 5px 8px; opacity:.5}
+.r-x:hover{opacity:1; color:var(--alert)}
+.running{background:var(--sleep-soft)}
+.demo{opacity:.42; pointer-events:none}
+.demo-tag{
+  display:inline-block; font-size:10px; font-weight:500; letter-spacing:.06em;
+  border:1px solid var(--line); border-radius:4px; padding:0 4px; margin-left:6px; color:var(--muted);
+  vertical-align:1px;
+}
+.empty{
+  background:var(--surface-2); border:1px dashed var(--line); border-radius:var(--r);
+  padding:13px 14px; font-size:12.5px; color:var(--ink-2); margin-bottom:1px; line-height:1.6;
+}
+
+.bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:20;
+  background:var(--bg); border-top:1px solid var(--line);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+}
+.bar-in{max-width:560px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.act{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:10px 4px 9px; text-align:center; box-shadow:var(--shadow);
+  transition:transform .12s ease;
+}
+.act:active{transform:scale(.96)}
+.act i{display:block; font-size:11px; line-height:1; margin-bottom:5px; font-style:normal}
+.act span{font-size:12px; font-weight:500; display:block}
+.act.a-feed i{color:var(--feed)} .act.a-diaper i{color:var(--diaper)}
+.act.a-sleep i{color:var(--sleep)} .act.a-etc i{color:var(--muted)}
+.act.on{background:var(--sleep); border-color:var(--sleep); color:#fff}
+.act.on i{color:#fff}
+
+.veil{
+  position:fixed; inset:0; z-index:30; background:rgba(10,16,18,.5);
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.sheet{
+  width:100%; max-width:560px; background:var(--bg);
+  border-radius:20px 20px 0 0; padding:6px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  max-height:86vh; overflow-y:auto;
+}
+.grip{width:34px; height:4px; border-radius:3px; background:var(--line); margin:8px auto 14px}
+.sheet h2{font-size:16px; font-weight:700; margin:0 0 14px; letter-spacing:-.01em}
+.fld{margin-bottom:14px}
+.fld > label{font-size:11.5px; color:var(--muted); display:block; margin-bottom:7px}
+.chips{display:flex; flex-wrap:wrap; gap:7px}
+.chip{
+  border:1px solid var(--line); background:var(--surface); border-radius:11px;
+  padding:10px 14px; font-size:14px; font-weight:500; flex:1 1 auto; min-width:64px;
+}
+.chip.sel{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.chip.warnv.sel{background:var(--alert); border-color:var(--alert); color:#fff}
+.chip.sm{padding:8px 12px; font-size:13px; font-family:var(--mono); min-width:0; flex:0 1 auto}
+.toggles{display:flex; gap:7px}
+.num{
+  width:100%; background:var(--surface); border:1px solid var(--line);
+  border-radius:11px; padding:11px 13px; font-family:var(--mono); font-size:15px;
+}
+.hint{font-size:11.5px; color:var(--alert); margin-top:7px; line-height:1.5}
+.save{
+  width:100%; background:var(--feed); color:#1B1204; border-radius:13px;
+  padding:15px; font-size:15.5px; font-weight:700; margin-top:4px;
+}
+.save[disabled]{opacity:.4; cursor:default}
+.ghost{width:100%; padding:12px; font-size:13.5px; color:var(--muted); margin-top:2px}
+
+.toast{
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:calc(var(--bar) + 24px + env(safe-area-inset-bottom, 0px)); z-index:40;
+  background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:24px;
+  font-size:13px; font-weight:500; box-shadow:var(--shadow); max-width:88vw; text-align:center;
+}
+.mode{display:block; width:100%; text-align:center; font-size:11.5px; color:var(--muted); padding:16px 0 4px}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-id">
+      <button class="top-name" id="btn-baby">
+        <b id="baby-name">아기</b>
+        <span class="dplus" id="baby-dplus" hidden></span>
+      </button>
+      <div class="top-date mono" id="view-date"></div>
+    </div>
+    <div class="nav">
+      <button id="prev-day" aria-label="이전 날">&#9664;</button>
+      <button id="next-day" aria-label="다음 날">&#9654;</button>
+    </div>
+  </header>
+
+  <section class="tiles" id="tiles"></section>
+  <section class="sum" id="sum"></section>
+
+  <div class="log-h"><b id="log-title">오늘 기록</b><span id="log-count"></span></div>
+  <ul class="log" id="log"></ul>
+
+  <span class="mode" id="mode"></span>
+</div>
+
+<nav class="bar">
+  <div class="bar-in">
+    <button class="act a-feed" data-open="feed"><i>&#9679;</i><span>수유</span></button>
+    <button class="act a-diaper" data-open="diaper"><i>&#9679;</i><span>기저귀</span></button>
+    <button class="act a-sleep" id="act-sleep"><i>&#9679;</i><span>재우기</span></button>
+    <button class="act a-etc" data-open="etc"><i>&#9679;</i><span>기타</span></button>
+  </div>
+</nav>
+
+<script>
+(function(){
+"use strict";
+
+var DAY = 86400000;
+var STORE_KEY = "babylog.v1";
+var db = null, usingDb = false, unsubs = [];
+var DAYS = new Map();
+var BABY = { name:"", birth:"" };
+var viewKey = dayKey(Date.now());
+var sheet = null, toastTimer = null;
+var writeQ = Promise.resolve();
+
+function two(n){ return n < 10 ? "0" + n : "" + n; }
+function dayKey(ts){ var d = new Date(ts); return d.getFullYear() + "-" + two(d.getMonth()+1) + "-" + two(d.getDate()); }
+function keyToDate(k){ var p = k.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function hhmm(ts){ var d = new Date(ts); return two(d.getHours()) + ":" + two(d.getMinutes()); }
+function dur(ms){
+  if (ms < 0) ms = 0;
+  var m = Math.floor(ms / 60000), h = Math.floor(m / 60);
+  return h > 0 ? { a:h, au:"시간", b:m % 60, bu:"분" } : { a:m, au:"분", b:null };
+}
+function durText(ms){ var d = dur(ms); return d.b === null ? d.a + d.au : d.a + d.au + " " + d.b + d.bu; }
+function dowKo(d){ return ["일","월","화","수","목","금","토"][d.getDay()]; }
+
+function readLocal(){
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch(e){ return {}; }
+}
+function writeLocal(obj){
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch(e){}
+}
+function loadLocalIntoDays(){
+  var raw = readLocal();
+  DAYS.clear();
+  var days = raw.days || {};
+  Object.keys(days).forEach(function(k){ DAYS.set(k, days[k]); });
+  if (raw.baby) BABY = { name: raw.baby.name || "", birth: raw.baby.birth || "" };
+}
+function saveAllLocal(){
+  var days = {};
+  DAYS.forEach(function(v, k){ days[k] = v; });
+  writeLocal({ days:days, baby:BABY });
+}
+function mkId(t){ return t.toString(36) + "-" + Math.random().toString(36).slice(2, 7); }
+
+function enqueue(fn){
+  writeQ = writeQ.catch(function(){}).then(fn);
+  return writeQ;
+}
+
+function applyLocalPatch(k, id, patch){
+  var day = DAYS.get(k) || { date:k, events:{} };
+  var cur = day.events[id] || {};
+  var next = {};
+  Object.keys(cur).forEach(function(f){ next[f] = cur[f]; });
+  Object.keys(patch).forEach(function(f){ next[f] = patch[f]; });
+  var events = {};
+  Object.keys(day.events).forEach(function(f){ events[f] = day.events[f]; });
+  events[id] = next;
+  DAYS.set(k, { date:k, events:events });
+  if (!usingDb) saveAllLocal();
+}
+function putEvent(ev){
+  var k = dayKey(ev.t), id = mkId(ev.t);
+  applyLocalPatch(k, id, ev);
+  render();
+  enqueue(function(){ return persist(k, id, ev); });
+  return id;
+}
+function patchEvent(k, id, patch){
+  applyLocalPatch(k, id, patch);
+  render();
+  enqueue(function(){ return persist(k, id, patch); });
+}
+function persist(k, id, patch){
+  if (!usingDb || !db) { saveAllLocal(); return Promise.resolve(); }
+  var ref = db.doc("days/" + k);
+  var body = {}; body[id] = patch;
+  return ref.update({ events: body }).catch(function(err){
+    if (err && err.code === "invalid_argument") {
+      var day = DAYS.get(k) || { date:k, events:{} };
+      return ref.set({ date:k, events:day.events });
+    }
+    throw err;
+  }).catch(function(err){ toast(errText(err)); });
+}
+function errText(err){
+  var c = err && err.code;
+  if (c === "quota_exceeded") return "저장 공간이 찼습니다. 오래된 날짜를 정리해 주세요.";
+  if (c === "resource_exhausted") return "요청이 몰렸습니다. 잠시 후 다시 눌러 주세요.";
+  if (c === "revoked" || c === "not_granted") return "공유 저장소에 접근할 수 없어 이 기기에만 남습니다.";
+  return "저장하지 못했습니다. 다시 눌러 주세요.";
+}
+
+function eventsOf(k){
+  var day = DAYS.get(k);
+  if (!day) return [];
+  var evs = day.events || {};
+  return Object.keys(evs).map(function(id){
+    var e = evs[id] || {}, o = { id:id, day:k };
+    Object.keys(e).forEach(function(f){ o[f] = e[f]; });
+    return o;
+  }).filter(function(e){ return !e.del && typeof e.t === "number"; })
+    .sort(function(a,b){ return b.t - a.t; });
+}
+function allEvents(){
+  var out = [];
+  DAYS.forEach(function(_, k){ out = out.concat(eventsOf(k)); });
+  return out.sort(function(a,b){ return b.t - a.t; });
+}
+function lastOf(kind){
+  var all = allEvents();
+  for (var i = 0; i < all.length; i++) if (all[i].k === kind) return all[i];
+  return null;
+}
+function runningSleep(){
+  var all = allEvents();
+  for (var i = 0; i < all.length; i++) if (all[i].k === "sleep" && !all[i].end) return all[i];
+  return null;
+}
+function dplus(k){
+  if (!BABY.birth) return null;
+  var n = Math.round((keyToDate(k) - keyToDate(BABY.birth)) / DAY) + 1;
+  return n >= 1 ? n : null;
+}
+
+var FEED_KIND = { L:"왼쪽 젖", R:"오른쪽 젖", bottle:"분유", pump:"유축 모유" };
+var POO_COLOR = { yellow:"노란색", green:"초록색", brown:"갈색", black:"검은색", white:"흰색", red:"붉은색" };
+var POO_FLAG = { black:1, white:1, red:1 };
+var ETC_TAG = { bath:"목욕", vitd:"비타민D", weight:"몸무게", temp:"체온", note:"메모" };
+
+function label(e){
+  if (e.k === "feed") return e.m ? FEED_KIND[e.m] : "수유";
+  if (e.k === "diaper") return e.pee && e.poo ? "소변 + 대변" : e.poo ? "대변" : "소변";
+  if (e.k === "sleep") return e.end ? "수면" : "자는 중";
+  return ETC_TAG[e.tag] || "기록";
+}
+function detail(e){
+  var p = [];
+  if (e.k === "feed") {
+    if (e.ml) p.push(e.ml + " ml");
+    if (e.min) p.push(e.min + "분");
+    if (e.burp) p.push("트림 O");
+    if (e.spit) p.push("게워냄");
+  } else if (e.k === "diaper") {
+    if (e.poo && e.color) p.push(POO_COLOR[e.color] + (POO_FLAG[e.color] ? " — 소아과 확인 권장" : ""));
+  } else if (e.k === "sleep") {
+    p.push(e.end ? durText(e.end - e.t) + " (" + hhmm(e.t) + "-" + hhmm(e.end) + ")"
+                 : durText(Date.now() - e.t) + " 경과");
+  } else {
+    if (e.tag === "weight" && e.val) p.push(e.val + " g");
+    if (e.tag === "temp" && e.val) p.push(e.val + " C");
+    if (e.note) p.push(e.note);
+  }
+  return p.join(" · ");
+}
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
+  });
+}
+
+function render(){ renderHeader(); renderTiles(); renderSummary(); renderLog(); renderBar(); }
+
+function renderHeader(){
+  document.getElementById("baby-name").textContent = BABY.name || "아기 이름 설정";
+  var dp = dplus(viewKey), el = document.getElementById("baby-dplus");
+  if (dp) { el.textContent = "D+" + dp; el.hidden = false; } else { el.hidden = true; }
+
+  var d = keyToDate(viewKey), today = dayKey(Date.now());
+  var rel = viewKey === today ? "오늘"
+          : viewKey === dayKey(Date.now() - DAY) ? "어제" : dowKo(d) + "요일";
+  document.getElementById("view-date").textContent = (d.getMonth()+1) + "월 " + d.getDate() + "일 · " + rel;
+  document.getElementById("next-day").disabled = viewKey >= today;
+}
+
+function tile(kind, cls, name, last){
+  if (!last) {
+    return '<div class="tile none"><span class="tile-k">' + name +
+           '</span><div class="tile-v">기록 없음</div></div>';
+  }
+  var running = kind === "sleep" && !last.end;
+  var since = Date.now() - last.t;
+  var d = dur(since);
+  var warn = kind === "feed" && since > 3 * 3600000;
+  var sub = running ? "자는 중" : hhmm(last.t) + " · " + label(last);
+  return '<div class="tile ' + cls + (warn ? " warn" : "") + (running ? " live" : "") + '">' +
+    '<span class="tile-k">' + name + '</span>' +
+    '<div class="tile-v mono">' + d.a + '<small>' + d.au + '</small>' +
+    (d.b !== null ? ' ' + d.b + '<small>' + d.bu + '</small>' : '') + '</div>' +
+    '<div class="tile-s">' + esc(sub) + '</div></div>';
+}
+function renderTiles(){
+  var sleeping = runningSleep();
+  document.getElementById("tiles").innerHTML =
+    tile("feed", "t-feed", "마지막 수유", lastOf("feed")) +
+    tile("diaper", "t-diaper", "마지막 기저귀", lastOf("diaper")) +
+    tile("sleep", "t-sleep", sleeping ? "자기 시작" : "마지막 수면", sleeping || lastOf("sleep"));
+}
+
+function renderSummary(){
+  var ev = eventsOf(viewKey);
+  var feeds = ev.filter(function(e){ return e.k === "feed"; });
+  var ml = feeds.reduce(function(s,e){ return s + (e.ml || 0); }, 0);
+  var pee = 0, poo = 0;
+  ev.forEach(function(e){ if (e.k === "diaper") { if (e.pee) pee++; if (e.poo) poo++; } });
+  var sleepMs = ev.filter(function(e){ return e.k === "sleep"; })
+    .reduce(function(s,e){ return s + ((e.end || Date.now()) - e.t); }, 0);
+  var sd = dur(sleepMs);
+
+  function pips(n, goal){
+    var out = '<div class="pips">';
+    for (var i = 0; i < goal; i++) out += '<i class="pip' + (i < n ? " on" : "") + '"></i>';
+    return out + "</div>";
+  }
+  var dp = dplus(viewKey);
+  var showGoal = dp === null || dp >= 5;
+
+  var html =
+    '<div class="sum-i"><span class="sum-k">수유</span><div class="sum-v mono">' + feeds.length +
+      '<span>회</span></div>' + (ml ? '<div class="sum-k mono" style="margin-top:3px">' + ml + ' ml</div>' : '') + '</div>' +
+    '<div class="sum-i"><span class="sum-k">소변</span><div class="sum-v mono">' + pee +
+      '<span>회</span></div>' + (showGoal ? pips(pee, 6) : '') + '</div>' +
+    '<div class="sum-i"><span class="sum-k">대변</span><div class="sum-v mono">' + poo +
+      '<span>회</span></div>' + (showGoal ? pips(poo, 3) : '') + '</div>' +
+    '<div class="sum-i"><span class="sum-k">총 수면</span><div class="sum-v mono">' + sd.a +
+      '<span>' + sd.au + '</span>' + (sd.b !== null ? ' ' + sd.b + '<span>분</span>' : '') + '</div></div>';
+
+  if (showGoal) {
+    var ok = pee >= 6 && poo >= 3;
+    html += '<div class="sum-note">' + (ok
+      ? '소변 6회 · 대변 3회 기준을 넘었습니다 — 수유량이 충분하다는 신호입니다.'
+      : '생후 5일 이후 기준은 하루 소변 6회 · 대변 3회 이상입니다. 며칠 연속 못 미치면 소아과에 알려 주세요.') + '</div>';
+  }
+  document.getElementById("sum").innerHTML = html;
+}
+
+function renderLog(){
+  var ev = eventsOf(viewKey), log = document.getElementById("log");
+  var today = dayKey(Date.now()), vd = keyToDate(viewKey);
+  document.getElementById("log-title").textContent =
+    viewKey === today ? "오늘 기록" : (vd.getMonth()+1) + "/" + vd.getDate() + " 기록";
+  document.getElementById("log-count").textContent = ev.length ? ev.length + "건" : "";
+
+  if (!ev.length) {
+    var any = allEvents().length;
+    log.innerHTML = '<li><div class="empty">' +
+      (any ? '이 날짜에는 기록이 없습니다.'
+           : '아직 기록이 없습니다. 아래 버튼을 누르면 실제 기록이 시작됩니다. 밑의 세 줄은 화면이 어떻게 보이는지 보여 주는 <b>예시</b>입니다.') +
+      '</div></li>' + (any ? "" : demoRows());
+    return;
+  }
+  log.innerHTML = ev.map(function(e){
+    var d = detail(e);
+    var flagged = e.k === "diaper" && e.poo && POO_FLAG[e.color];
+    return '<li><div class="row' + (e.k === "sleep" && !e.end ? " running" : "") + '">' +
+      '<div class="r-t mono">' + hhmm(e.t) + '</div>' +
+      '<div class="r-d k-' + e.k + '"></div>' +
+      '<div class="r-b"><div class="r-l">' + label(e) + '</div>' +
+      (d ? '<div class="r-s' + (flagged ? " flag" : "") + '">' + esc(d) + '</div>' : '') + '</div>' +
+      '<button class="r-x" data-del="' + e.id + '" aria-label="삭제">&times;</button></div></li>';
+  }).join("");
+}
+function demoRows(){
+  var now = Date.now();
+  var rows = [
+    { t: now - 95*60000, k:"feed", m:"L", min:15, burp:true },
+    { t: now - 150*60000, k:"diaper", pee:true, poo:true, color:"yellow" },
+    { t: now - 210*60000, k:"sleep", end: now - 120*60000 }
+  ];
+  return rows.map(function(e, i){
+    return '<li class="demo"><div class="row">' +
+      '<div class="r-t mono">' + hhmm(e.t) + '</div>' +
+      '<div class="r-d k-' + e.k + '"></div>' +
+      '<div class="r-b"><div class="r-l">' + label(e) +
+      (i === 0 ? '<span class="demo-tag">예시</span>' : '') + '</div>' +
+      '<div class="r-s">' + detail(e) + '</div></div><span></span></div></li>';
+  }).join("");
+}
+function renderBar(){
+  var s = runningSleep(), btn = document.getElementById("act-sleep");
+  btn.classList.toggle("on", !!s);
+  btn.querySelector("span").textContent = s ? "깼어요" : "재우기";
+}
+
+function toast(msg){
+  var old = document.querySelector(".toast");
+  if (old) old.remove();
+  var el = document.createElement("div");
+  el.className = "toast"; el.textContent = msg; el.setAttribute("role", "status");
+  document.body.appendChild(el);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.remove(); }, 2600);
+}
+
+function openSheet(html, onMount){
+  closeSheet();
+  var veil = document.createElement("div");
+  veil.className = "veil";
+  veil.innerHTML = '<div class="sheet" role="dialog" aria-modal="true"><div class="grip"></div>' + html + '</div>';
+  veil.addEventListener("click", function(e){ if (e.target === veil) closeSheet(); });
+  document.body.appendChild(veil);
+  sheet = veil;
+  if (onMount) onMount(veil);
+  var f = veil.querySelector("button, input");
+  if (f) f.focus({ preventScroll:true });
+}
+function closeSheet(){ if (sheet) { sheet.remove(); sheet = null; } }
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeSheet(); });
+
+function chipGroup(root, sel, onPick){
+  root.querySelectorAll(sel).forEach(function(c){
+    c.addEventListener("click", function(){
+      var was = c.classList.contains("sel");
+      root.querySelectorAll(sel).forEach(function(o){ o.classList.remove("sel"); });
+      if (!was) c.classList.add("sel");
+      onPick(was ? null : c.getAttribute("data-v"), c);
+    });
+  });
+}
+function picked(root, sel){
+  var c = root.querySelector(sel + ".sel");
+  return c ? c.getAttribute("data-v") : null;
+}
+
+function feedSheet(){
+  openSheet(
+    '<h2>수유 기록</h2>' +
+    '<div class="fld"><label>무엇을 먹였나요</label><div class="chips" id="fk">' +
+      '<button class="chip" data-v="L">왼쪽 젖</button>' +
+      '<button class="chip" data-v="R">오른쪽 젖</button>' +
+      '<button class="chip" data-v="bottle">분유</button>' +
+      '<button class="chip" data-v="pump">유축</button></div></div>' +
+    '<div class="fld" id="amt" hidden><label id="amt-l"></label>' +
+      '<div class="chips" id="aq"></div>' +
+      '<input class="num" id="av" type="number" inputmode="numeric" min="0" style="margin-top:7px"></div>' +
+    '<div class="fld"><label>트림 · 게워냄</label><div class="toggles">' +
+      '<button class="chip" id="burp">트림 했어요</button>' +
+      '<button class="chip warnv" id="spit">게워냈어요</button></div></div>' +
+    '<button class="save" id="go">기록하기</button>' +
+    '<button class="ghost" id="skip">종류 없이 시각만 기록</button>',
+    function(root){
+      var amt = root.querySelector("#amt"), aq = root.querySelector("#aq");
+      var av = root.querySelector("#av"), al = root.querySelector("#amt-l");
+      chipGroup(root, "#fk .chip", function(v){
+        if (!v) { amt.hidden = true; return; }
+        amt.hidden = false;
+        var breast = v === "L" || v === "R";
+        al.textContent = breast ? "얼마나 물렸나요 (분)" : "얼마나 먹었나요 (ml)";
+        av.placeholder = breast ? "분" : "ml";
+        av.value = "";
+        aq.innerHTML = (breast ? [5,10,15,20,25] : [30,60,90,120,150]).map(function(n){
+          return '<button class="chip sm" data-v="' + n + '">' + n + '</button>';
+        }).join("");
+        chipGroup(root, "#aq .chip", function(n){ av.value = n || ""; });
+      });
+      root.querySelector("#burp").addEventListener("click", function(){ this.classList.toggle("sel"); });
+      root.querySelector("#spit").addEventListener("click", function(){ this.classList.toggle("sel"); });
+      function save(withKind){
+        var m = withKind ? picked(root, "#fk .chip") : null;
+        var ev = { k:"feed", t:Date.now() };
+        if (m) {
+          ev.m = m;
+          var n = parseInt(av.value, 10);
+          if (n > 0) { if (m === "L" || m === "R") ev.min = n; else ev.ml = n; }
+        }
+        if (root.querySelector("#burp").classList.contains("sel")) ev.burp = true;
+        if (root.querySelector("#spit").classList.contains("sel")) ev.spit = true;
+        putEvent(ev); closeSheet(); toast("수유 " + hhmm(ev.t) + " 기록됨");
+      }
+      root.querySelector("#go").addEventListener("click", function(){ save(true); });
+      root.querySelector("#skip").addEventListener("click", function(){ save(false); });
+    }
+  );
+}
+
+function diaperSheet(){
+  openSheet(
+    '<h2>기저귀 기록</h2>' +
+    '<div class="fld"><label>무엇이 있었나요</label><div class="chips" id="dk">' +
+      '<button class="chip" data-v="pee">소변</button>' +
+      '<button class="chip" data-v="poo">대변</button>' +
+      '<button class="chip" data-v="both">둘 다</button></div></div>' +
+    '<div class="fld" id="col" hidden><label>대변 색</label><div class="chips">' +
+      '<button class="chip sm" data-v="yellow">노랑</button>' +
+      '<button class="chip sm" data-v="green">초록</button>' +
+      '<button class="chip sm" data-v="brown">갈색</button>' +
+      '<button class="chip sm warnv" data-v="black">검정</button>' +
+      '<button class="chip sm warnv" data-v="white">흰색</button>' +
+      '<button class="chip sm warnv" data-v="red">붉은색</button></div>' +
+      '<div class="hint" id="ch" hidden>태변이 끝난 뒤의 검은색, 그리고 흰색이나 붉은색 변은 소아과에 알려 주세요.</div></div>' +
+    '<button class="save" id="go" disabled>기록하기</button>',
+    function(root){
+      var col = root.querySelector("#col"), hint = root.querySelector("#ch"), go = root.querySelector("#go");
+      chipGroup(root, "#dk .chip", function(v){
+        col.hidden = !(v === "poo" || v === "both");
+        go.disabled = !v;
+      });
+      chipGroup(root, "#col .chip", function(v){ hint.hidden = !POO_FLAG[v]; });
+      go.addEventListener("click", function(){
+        var v = picked(root, "#dk .chip");
+        if (!v) return;
+        var ev = { k:"diaper", t:Date.now(), pee:v !== "poo", poo:v !== "pee" };
+        var c = picked(root, "#col .chip");
+        if (c && ev.poo) ev.color = c;
+        putEvent(ev); closeSheet(); toast(label(ev) + " " + hhmm(ev.t) + " 기록됨");
+      });
+    }
+  );
+}
+
+function etcSheet(){
+  openSheet(
+    '<h2>기타 기록</h2>' +
+    '<div class="fld"><label>무엇을 기록할까요</label><div class="chips" id="ek">' +
+      '<button class="chip" data-v="bath">목욕</button>' +
+      '<button class="chip" data-v="vitd">비타민D</button>' +
+      '<button class="chip" data-v="weight">몸무게</button>' +
+      '<button class="chip" data-v="temp">체온</button>' +
+      '<button class="chip" data-v="note">메모</button></div></div>' +
+    '<div class="fld" id="vf" hidden><label id="vl"></label>' +
+      '<input class="num" id="vv" type="number" inputmode="decimal" step="0.1"></div>' +
+    '<div class="fld" id="nf" hidden><label>메모</label>' +
+      '<input class="num" id="nv" type="text" maxlength="200" placeholder="황달, 발진, 심한 울음 등"></div>' +
+    '<button class="save" id="go" disabled>기록하기</button>',
+    function(root){
+      var vf = root.querySelector("#vf"), nf = root.querySelector("#nf");
+      var vl = root.querySelector("#vl"), vv = root.querySelector("#vv"), go = root.querySelector("#go");
+      chipGroup(root, "#ek .chip", function(v){
+        go.disabled = !v;
+        vf.hidden = !(v === "weight" || v === "temp");
+        nf.hidden = v !== "note";
+        if (v === "weight") { vl.textContent = "몸무게 (g)"; vv.placeholder = "3400"; }
+        if (v === "temp") { vl.textContent = "체온 (C)"; vv.placeholder = "36.8"; }
+      });
+      go.addEventListener("click", function(){
+        var tag = picked(root, "#ek .chip");
+        if (!tag) return;
+        var ev = { k:"etc", t:Date.now(), tag:tag };
+        var n = parseFloat(vv.value);
+        if ((tag === "weight" || tag === "temp") && n > 0) ev.val = n;
+        if (tag === "note") {
+          var txt = root.querySelector("#nv").value.trim();
+          if (txt) ev.note = txt.slice(0, 200);
+        }
+        putEvent(ev); closeSheet(); toast(ETC_TAG[tag] + " 기록됨");
+      });
+    }
+  );
+}
+
+function babySheet(){
+  openSheet(
+    '<h2>아기 정보</h2>' +
+    '<div class="fld"><label>이름 또는 태명</label>' +
+      '<input class="num" id="bn" type="text" maxlength="20" placeholder="예: 봄이"></div>' +
+    '<div class="fld"><label>생년월일 — D+ 일수 계산에 씁니다</label>' +
+      '<input class="num" id="bd" type="date"></div>' +
+    '<button class="save" id="go">저장</button>',
+    function(root){
+      root.querySelector("#bn").value = BABY.name || "";
+      root.querySelector("#bd").value = BABY.birth || "";
+      root.querySelector("#go").addEventListener("click", function(){
+        BABY = {
+          name: root.querySelector("#bn").value.trim().slice(0, 20),
+          birth: root.querySelector("#bd").value || ""
+        };
+        if (usingDb && db) {
+          var snapshot = { name:BABY.name, birth:BABY.birth };
+          enqueue(function(){ return db.doc("settings/baby").set(snapshot).catch(function(e){ toast(errText(e)); }); });
+        } else { saveAllLocal(); }
+        closeSheet(); render(); toast("저장했습니다");
+      });
+    }
+  );
+}
+
+document.querySelectorAll("[data-open]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var w = b.getAttribute("data-open");
+    if (w === "feed") feedSheet();
+    else if (w === "diaper") diaperSheet();
+    else etcSheet();
+  });
+});
+document.getElementById("act-sleep").addEventListener("click", function(){
+  var s = runningSleep();
+  if (s) {
+    var end = Date.now();
+    patchEvent(s.day, s.id, { end:end });
+    toast("수면 " + durText(end - s.t) + " 기록됨");
+  } else {
+    var ev = { k:"sleep", t:Date.now(), end:null };
+    putEvent(ev); toast("재우기 시작 " + hhmm(ev.t));
+  }
+});
+document.getElementById("btn-baby").addEventListener("click", babySheet);
+document.getElementById("log").addEventListener("click", function(e){
+  var b = e.target.closest("[data-del]");
+  if (!b) return;
+  var id = b.getAttribute("data-del");
+  var hit = eventsOf(viewKey).filter(function(x){ return x.id === id; })[0];
+  if (!hit) return;
+  if (!window.confirm(hhmm(hit.t) + " " + label(hit) + " 기록을 지울까요?")) return;
+  patchEvent(viewKey, id, { del:1 });
+  toast("삭제했습니다");
+});
+document.getElementById("prev-day").addEventListener("click", function(){
+  viewKey = dayKey(keyToDate(viewKey).getTime() - DAY); render();
+});
+document.getElementById("next-day").addEventListener("click", function(){
+  var n = keyToDate(viewKey).getTime() + DAY;
+  if (n > Date.now()) return;
+  viewKey = dayKey(n); render();
+});
+
+loadLocalIntoDays();
+render();
+setInterval(function(){ if (!sheet) { renderTiles(); renderSummary(); } }, 15000);
+
+function setMode(t){ document.getElementById("mode").textContent = t; }
+setMode("이 기기에 저장 중 — 공유 저장소를 확인하고 있습니다");
+
+(async function(){
+  try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; }
+  catch (e) { db = null; }
+  if (!db) {
+    setMode("이 기기에만 저장됩니다. 다른 기기와는 공유되지 않습니다.");
+    return;
+  }
+  usingDb = true;
+  setMode("이 링크를 여는 사람과 실시간으로 공유됩니다.");
+
+  var pending = readLocal();
+  var pendingDays = pending.days || {};
+
+  unsubs.push(db.collection("days").orderBy("date", "desc").limit(21).onSnapshot(function(snap){
+    DAYS.clear();
+    snap.docs.forEach(function(d){
+      var body = d.data() || {};
+      DAYS.set(d.id, { date:d.id, events:body.events || {} });
+    });
+    render();
+  }, function(err){ toast(errText(err)); }));
+
+  unsubs.push(db.doc("settings/baby").onSnapshot(function(d){
+    if (!d.exists) return;
+    var b = d.data() || {};
+    BABY = { name:b.name || "", birth:b.birth || "" };
+    render();
+  }, function(){}));
+
+  var keys = Object.keys(pendingDays);
+  if (keys.length) {
+    keys.forEach(function(k){
+      var evs = (pendingDays[k] || {}).events || {};
+      Object.keys(evs).forEach(function(id){
+        enqueue(function(){ return persist(k, id, evs[id]); });
+      });
+    });
+    if (pending.baby && (pending.baby.name || pending.baby.birth)) {
+      var pb = { name:pending.baby.name || "", birth:pending.baby.birth || "" };
+      enqueue(function(){ return db.doc("settings/baby").set(pb).catch(function(){}); });
+    }
+    enqueue(function(){ try { localStorage.removeItem(STORE_KEY); } catch(e){} });
+    toast("이 기기에 있던 " + keys.length + "일치 기록을 올렸습니다");
+  }
+})();
+})();
+</script>
+</body>
+</html>
