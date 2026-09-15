@@ -11,27 +11,18 @@
 <meta name="apple-mobile-web-app-title" content="아기 기록">
 <meta name="description" content="수유·기저귀·수면을 두 번의 탭으로 남기고 마지막 기록 이후 경과 시간을 보는 신생아 기록장.">
 <meta name="robots" content="noindex">
+<title>마지막 수유 언제였지</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%8D%BC%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
 :root{
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   color-scheme: light dark;
-}
-body{ margin:0; }
-img{ max-width:100%; }
-[hidden]{ display:none !important; }
-</style>
-</head>
-<body>
-<title>마지막 수유 언제였지</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
-<style>
-:root{
   --bg:#EDF1F0; --surface:#FFFFFF; --surface-2:#F5F8F7; --line:#DBE3E2;
   --ink:#0F191C; --ink-2:#44565B; --muted:#77898E;
   --feed:#C9821C; --diaper:#2F8F88; --sleep:#5E68B8; --alert:#C2472F;
-  --feed-soft:rgba(201,130,28,.12); --diaper-soft:rgba(47,143,136,.12); --sleep-soft:rgba(94,104,184,.12);
+  --feed-soft:rgba(201,130,28,.12); --sleep-soft:rgba(94,104,184,.12);
   --shadow:0 1px 2px rgba(15,25,28,.05), 0 6px 20px rgba(15,25,28,.05);
   --r:14px; --bar:84px;
   --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
@@ -42,7 +33,7 @@ img{ max-width:100%; }
     --bg:#0F1518; --surface:#172126; --surface-2:#1C282E; --line:#26343A;
     --ink:#E7EEEC; --ink-2:#AEC0C3; --muted:#7B8F95;
     --feed:#E9A23B; --diaper:#4EA5A0; --sleep:#868FD6; --alert:#E0725A;
-    --feed-soft:rgba(233,162,59,.14); --diaper-soft:rgba(78,165,160,.14); --sleep-soft:rgba(134,143,214,.14);
+    --feed-soft:rgba(233,162,59,.14); --sleep-soft:rgba(134,143,214,.14);
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
   }
 }
@@ -50,62 +41,68 @@ img{ max-width:100%; }
   --bg:#0F1518; --surface:#172126; --surface-2:#1C282E; --line:#26343A;
   --ink:#E7EEEC; --ink-2:#AEC0C3; --muted:#7B8F95;
   --feed:#E9A23B; --diaper:#4EA5A0; --sleep:#868FD6; --alert:#E0725A;
-  --feed-soft:rgba(233,162,59,.14); --diaper-soft:rgba(78,165,160,.14); --sleep-soft:rgba(134,143,214,.14);
+  --feed-soft:rgba(233,162,59,.14); --sleep-soft:rgba(134,143,214,.14);
   --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
-body{
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:var(--sans); font-size:15px; line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{
-  max-width:560px; margin:0 auto; padding-inline:16px;
-  padding-bottom:calc(var(--bar) + 24px + env(safe-area-inset-bottom, 0px));
-}
+body{margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none !important}
 button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
 input{font:inherit; color:inherit}
 :focus-visible{outline:2px solid var(--feed); outline-offset:2px; border-radius:6px}
-@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
 .mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
-.top{
-  position:sticky; top:env(safe-area-inset-top, 0px); z-index:5;
-  background:var(--bg); padding-block:14px 10px;
-  display:flex; align-items:center; gap:10px;
-}
+/* ---------- 관문 화면 ---------- */
+.gate{min-height:100%; display:flex; align-items:center; justify-content:center; padding:24px 16px}
+.gate-card{width:100%; max-width:380px}
+.gate-mark{font-size:30px; line-height:1; margin-bottom:14px}
+.gate h1{font-size:21px; font-weight:700; letter-spacing:-.02em; margin:0 0 6px; text-wrap:balance}
+.gate p.sub{font-size:13.5px; color:var(--muted); margin:0 0 22px; line-height:1.6}
+.field{margin-bottom:11px}
+.field label{display:block; font-size:11.5px; color:var(--muted); margin-bottom:6px}
+.inp{width:100%; background:var(--surface); border:1px solid var(--line);
+  border-radius:11px; padding:13px 14px; font-size:15px}
+.inp.code{font-family:var(--mono); font-size:19px; letter-spacing:.22em; text-align:center; text-transform:uppercase}
+.btn{width:100%; background:var(--feed); color:#1B1204; border-radius:12px;
+  padding:14px; font-size:15.5px; font-weight:700; margin-top:9px}
+.btn[disabled]{opacity:.45; cursor:default}
+.btn.alt{background:var(--surface); color:var(--ink); border:1px solid var(--line); font-weight:500}
+.linky{display:block; width:100%; text-align:center; font-size:13px; color:var(--muted); padding:13px 0 2px}
+.err{font-size:12.5px; color:var(--alert); margin-top:10px; line-height:1.5}
+.note{font-size:12px; color:var(--muted); margin-top:16px; line-height:1.6;
+  border-top:1px solid var(--line); padding-top:14px}
+
+/* ---------- 앱 ---------- */
+.wrap{max-width:560px; margin:0 auto; padding-inline:16px;
+  padding-bottom:calc(var(--bar) + 24px + env(safe-area-inset-bottom, 0px))}
+.top{position:sticky; top:env(safe-area-inset-top, 0px); z-index:5; background:var(--bg);
+  padding-block:14px 10px; display:flex; align-items:center; gap:10px}
 .top-id{flex:1; min-width:0}
-.top-name{
-  display:flex; align-items:baseline; gap:8px; width:100%;
-  text-align:left; padding:0;
-}
-.top-name b{font-size:17px; font-weight:700; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-.dplus{
-  font-family:var(--mono); font-size:12px; font-weight:600; color:var(--feed);
-  background:var(--feed-soft); padding:2px 7px; border-radius:20px; white-space:nowrap;
-}
+.top-name{display:flex; align-items:baseline; gap:8px; width:100%; text-align:left; padding:0}
+.top-name b{font-size:17px; font-weight:700; letter-spacing:-.01em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.dplus{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--feed);
+  background:var(--feed-soft); padding:2px 7px; border-radius:20px; white-space:nowrap}
 .top-date{font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-top:1px}
 .nav{display:flex; gap:4px}
-.nav button{
-  width:34px; height:34px; border-radius:10px; border:1px solid var(--line);
-  background:var(--surface); color:var(--ink-2); display:grid; place-items:center;
-}
+.nav button{width:34px; height:34px; border-radius:10px; border:1px solid var(--line);
+  background:var(--surface); color:var(--ink-2); display:grid; place-items:center}
 .nav button[disabled]{opacity:.35; cursor:default}
 
 .tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px}
-.tile{
-  background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow);
-  padding:12px 12px 11px; border-left:3px solid var(--line); min-width:0;
-}
-.tile-k{
-  font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.06em;
-  display:block; margin-bottom:5px;
-}
+.tile{background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow);
+  padding:12px 12px 11px; border-left:3px solid var(--line); min-width:0}
+.tile-k{font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.06em;
+  display:block; margin-bottom:5px}
 .tile-v{font-family:var(--mono); font-size:21px; font-weight:600; letter-spacing:-.02em; line-height:1.1}
 .tile-v small{font-size:12px; font-weight:400; letter-spacing:0; margin-left:1px}
-.tile-s{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.tile-s{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:3px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .tile.none .tile-v{color:var(--muted); font-size:15px; font-weight:400; padding-block:3px}
 .tile.t-feed{border-left-color:var(--feed)}
 .tile.t-diaper{border-left-color:var(--diaper)}
@@ -114,11 +111,9 @@ input{font:inherit; color:inherit}
 .tile.warn .tile-v{color:var(--alert)}
 .tile.live .tile-v{color:var(--sleep)}
 
-.sum{
-  background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow);
+.sum{background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow);
   padding:13px 14px; margin-bottom:14px;
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(78px,1fr)); gap:12px 8px;
-}
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(78px,1fr)); gap:12px 8px}
 .sum-i{min-width:0}
 .sum-k{font-size:11px; color:var(--muted); display:block; margin-bottom:2px}
 .sum-v{font-family:var(--mono); font-size:17px; font-weight:600; letter-spacing:-.02em}
@@ -126,21 +121,15 @@ input{font:inherit; color:inherit}
 .pips{display:flex; gap:3px; margin-top:5px}
 .pip{width:100%; height:3px; border-radius:2px; background:var(--line)}
 .pip.on{background:var(--diaper)}
-.sum-note{
-  grid-column:1/-1; font-size:11.5px; color:var(--muted); line-height:1.5;
-  border-top:1px solid var(--line); padding-top:9px; margin-top:1px;
-}
+.sum-note{grid-column:1/-1; font-size:11.5px; color:var(--muted); line-height:1.5;
+  border-top:1px solid var(--line); padding-top:9px; margin-top:1px}
 
-.log-h{
-  display:flex; align-items:baseline; justify-content:space-between;
-  margin:0 2px 8px; font-size:12px; color:var(--muted);
-}
+.log-h{display:flex; align-items:baseline; justify-content:space-between;
+  margin:0 2px 8px; font-size:12px; color:var(--muted)}
 .log-h b{font-size:13px; font-weight:500; color:var(--ink-2)}
 .log{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px}
-.row{
-  display:grid; grid-template-columns:52px 12px 1fr auto; align-items:start; gap:10px;
-  background:var(--surface); padding:11px 12px 11px 13px;
-}
+.row{display:grid; grid-template-columns:52px 12px 1fr auto; align-items:start; gap:10px;
+  background:var(--surface); padding:11px 12px 11px 13px}
 .log li:first-child .row{border-radius:var(--r) var(--r) 0 0}
 .log li:last-child .row{border-radius:0 0 var(--r) var(--r)}
 .log li:only-child .row{border-radius:var(--r)}
@@ -154,31 +143,18 @@ input{font:inherit; color:inherit}
 .r-l{font-size:14px; font-weight:500}
 .r-s{font-size:12.5px; color:var(--muted); font-family:var(--mono); margin-top:1px; overflow-wrap:anywhere}
 .r-s.flag{color:var(--alert); font-family:var(--sans)}
+.r-who{font-size:11px; color:var(--muted); font-family:var(--sans); font-weight:400}
 .r-x{color:var(--muted); font-size:16px; line-height:1; padding:5px 2px 5px 8px; opacity:.5}
 .r-x:hover{opacity:1; color:var(--alert)}
 .running{background:var(--sleep-soft)}
-.demo{opacity:.42; pointer-events:none}
-.demo-tag{
-  display:inline-block; font-size:10px; font-weight:500; letter-spacing:.06em;
-  border:1px solid var(--line); border-radius:4px; padding:0 4px; margin-left:6px; color:var(--muted);
-  vertical-align:1px;
-}
-.empty{
-  background:var(--surface-2); border:1px dashed var(--line); border-radius:var(--r);
-  padding:13px 14px; font-size:12.5px; color:var(--ink-2); margin-bottom:1px; line-height:1.6;
-}
+.empty{background:var(--surface-2); border:1px dashed var(--line); border-radius:var(--r);
+  padding:13px 14px; font-size:12.5px; color:var(--ink-2); line-height:1.6}
 
-.bar{
-  position:fixed; left:0; right:0; bottom:0; z-index:20;
-  background:var(--bg); border-top:1px solid var(--line);
-  padding:10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-}
+.bar{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--bg);
+  border-top:1px solid var(--line); padding:10px 16px calc(10px + env(safe-area-inset-bottom, 0px))}
 .bar-in{max-width:560px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
-.act{
-  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
-  padding:10px 4px 9px; text-align:center; box-shadow:var(--shadow);
-  transition:transform .12s ease;
-}
+.act{background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:10px 4px 9px; text-align:center; box-shadow:var(--shadow); transition:transform .12s ease}
 .act:active{transform:scale(.96)}
 .act i{display:block; font-size:11px; line-height:1; margin-bottom:5px; font-style:normal}
 .act span{font-size:12px; font-weight:500; display:block}
@@ -187,98 +163,107 @@ input{font:inherit; color:inherit}
 .act.on{background:var(--sleep); border-color:var(--sleep); color:#fff}
 .act.on i{color:#fff}
 
-.veil{
-  position:fixed; inset:0; z-index:30; background:rgba(10,16,18,.5);
-  display:flex; align-items:flex-end; justify-content:center;
-}
-.sheet{
-  width:100%; max-width:560px; background:var(--bg);
-  border-radius:20px 20px 0 0; padding:6px 16px calc(16px + env(safe-area-inset-bottom, 0px));
-  max-height:86vh; overflow-y:auto;
-}
+.veil{position:fixed; inset:0; z-index:30; background:rgba(10,16,18,.5);
+  display:flex; align-items:flex-end; justify-content:center}
+.sheet{width:100%; max-width:560px; background:var(--bg); border-radius:20px 20px 0 0;
+  padding:6px 16px calc(16px + env(safe-area-inset-bottom, 0px)); max-height:86vh; overflow-y:auto}
 .grip{width:34px; height:4px; border-radius:3px; background:var(--line); margin:8px auto 14px}
 .sheet h2{font-size:16px; font-weight:700; margin:0 0 14px; letter-spacing:-.01em}
 .fld{margin-bottom:14px}
 .fld > label{font-size:11.5px; color:var(--muted); display:block; margin-bottom:7px}
 .chips{display:flex; flex-wrap:wrap; gap:7px}
-.chip{
-  border:1px solid var(--line); background:var(--surface); border-radius:11px;
-  padding:10px 14px; font-size:14px; font-weight:500; flex:1 1 auto; min-width:64px;
-}
+.chip{border:1px solid var(--line); background:var(--surface); border-radius:11px;
+  padding:10px 14px; font-size:14px; font-weight:500; flex:1 1 auto; min-width:64px}
 .chip.sel{background:var(--ink); color:var(--bg); border-color:var(--ink)}
 .chip.warnv.sel{background:var(--alert); border-color:var(--alert); color:#fff}
 .chip.sm{padding:8px 12px; font-size:13px; font-family:var(--mono); min-width:0; flex:0 1 auto}
 .toggles{display:flex; gap:7px}
-.num{
-  width:100%; background:var(--surface); border:1px solid var(--line);
-  border-radius:11px; padding:11px 13px; font-family:var(--mono); font-size:15px;
-}
+.num{width:100%; background:var(--surface); border:1px solid var(--line);
+  border-radius:11px; padding:11px 13px; font-family:var(--mono); font-size:15px}
 .hint{font-size:11.5px; color:var(--alert); margin-top:7px; line-height:1.5}
-.save{
-  width:100%; background:var(--feed); color:#1B1204; border-radius:13px;
-  padding:15px; font-size:15.5px; font-weight:700; margin-top:4px;
-}
+.save{width:100%; background:var(--feed); color:#1B1204; border-radius:13px;
+  padding:15px; font-size:15.5px; font-weight:700; margin-top:4px}
 .save[disabled]{opacity:.4; cursor:default}
 .ghost{width:100%; padding:12px; font-size:13.5px; color:var(--muted); margin-top:2px}
+.danger{color:var(--alert)}
+.codebox{font-family:var(--mono); font-size:21px; letter-spacing:.2em; text-align:center;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  padding:16px; margin-bottom:9px; overflow-wrap:anywhere}
 
-.toast{
-  position:fixed; left:50%; transform:translateX(-50%);
+.toast{position:fixed; left:50%; transform:translateX(-50%);
   bottom:calc(var(--bar) + 24px + env(safe-area-inset-bottom, 0px)); z-index:40;
   background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:24px;
-  font-size:13px; font-weight:500; box-shadow:var(--shadow); max-width:88vw; text-align:center;
-}
+  font-size:13px; font-weight:500; box-shadow:var(--shadow); max-width:88vw; text-align:center}
 .mode{display:block; width:100%; text-align:center; font-size:11.5px; color:var(--muted); padding:16px 0 4px}
+.mode.warn{color:var(--alert)}
 </style>
+</head>
+<body>
 
-<div class="wrap">
-  <header class="top">
-    <div class="top-id">
-      <button class="top-name" id="btn-baby">
-        <b id="baby-name">아기</b>
-        <span class="dplus" id="baby-dplus" hidden></span>
-      </button>
-      <div class="top-date mono" id="view-date"></div>
-    </div>
-    <div class="nav">
-      <button id="prev-day" aria-label="이전 날">&#9664;</button>
-      <button id="next-day" aria-label="다음 날">&#9654;</button>
-    </div>
-  </header>
-
-  <section class="tiles" id="tiles"></section>
-  <section class="sum" id="sum"></section>
-
-  <div class="log-h"><b id="log-title">오늘 기록</b><span id="log-count"></span></div>
-  <ul class="log" id="log"></ul>
-
-  <span class="mode" id="mode"></span>
+<div id="gate" class="gate">
+  <div class="gate-card">
+    <div class="gate-mark">&#127868;</div>
+    <div id="gate-body"><p class="sub">불러오는 중…</p></div>
+  </div>
 </div>
 
-<nav class="bar">
-  <div class="bar-in">
-    <button class="act a-feed" data-open="feed"><i>&#9679;</i><span>수유</span></button>
-    <button class="act a-diaper" data-open="diaper"><i>&#9679;</i><span>기저귀</span></button>
-    <button class="act a-sleep" id="act-sleep"><i>&#9679;</i><span>재우기</span></button>
-    <button class="act a-etc" data-open="etc"><i>&#9679;</i><span>기타</span></button>
-  </div>
-</nav>
+<div id="app" hidden>
+  <div class="wrap">
+    <header class="top">
+      <div class="top-id">
+        <button class="top-name" id="btn-settings">
+          <b id="baby-name">아기</b>
+          <span class="dplus" id="baby-dplus" hidden></span>
+        </button>
+        <div class="top-date mono" id="view-date"></div>
+      </div>
+      <div class="nav">
+        <button id="prev-day" aria-label="이전 날">&#9664;</button>
+        <button id="next-day" aria-label="다음 날">&#9654;</button>
+      </div>
+    </header>
 
+    <section class="tiles" id="tiles"></section>
+    <section class="sum" id="sum"></section>
+
+    <div class="log-h"><b id="log-title">오늘 기록</b><span id="log-count"></span></div>
+    <ul class="log" id="log"></ul>
+
+    <span class="mode" id="mode"></span>
+  </div>
+
+  <nav class="bar">
+    <div class="bar-in">
+      <button class="act a-feed" data-open="feed"><i>&#9679;</i><span>수유</span></button>
+      <button class="act a-diaper" data-open="diaper"><i>&#9679;</i><span>기저귀</span></button>
+      <button class="act a-sleep" id="act-sleep"><i>&#9679;</i><span>재우기</span></button>
+      <button class="act a-etc" data-open="etc"><i>&#9679;</i><span>기타</span></button>
+    </div>
+  </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 <script>
 (function(){
 "use strict";
 
+// =====================================================================
+// 설정 — publishable 키는 공개되어도 안전하다. 접근 제어는 전부 DB 의 RLS 가 한다.
+// =====================================================================
+var SUPABASE_URL = "https://putpwosixowbldzllxnf.supabase.co";
+var SUPABASE_KEY = "sb_publishable_2fL1mtph3V3wkdwpVVrblQ_kKDAqWNa";
+
 var DAY = 86400000;
-var STORE_KEY = "babylog.v1";
-var db = null, usingDb = false, unsubs = [];
-var DAYS = new Map();
-var BABY = { name:"", birth:"" };
+var QUEUE_KEY = "babylog.queue.v2";
+var sb = null, SESSION = null, PROFILE = null, HH = null, BABY = null;
+var EVENTS = [];
 var viewKey = dayKey(Date.now());
-var sheet = null, toastTimer = null;
-var writeQ = Promise.resolve();
+var sheet = null, toastTimer = null, tickTimer = null, channel = null;
+var MEMBERS = {};
 
 function two(n){ return n < 10 ? "0" + n : "" + n; }
 function dayKey(ts){ var d = new Date(ts); return d.getFullYear() + "-" + two(d.getMonth()+1) + "-" + two(d.getDate()); }
-function keyToDate(k){ var p = k.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function keyToDate(k){ var p = String(k).split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
 function hhmm(ts){ var d = new Date(ts); return two(d.getHours()) + ":" + two(d.getMinutes()); }
 function dur(ms){
   if (ms < 0) ms = 0;
@@ -287,117 +272,21 @@ function dur(ms){
 }
 function durText(ms){ var d = dur(ms); return d.b === null ? d.a + d.au : d.a + d.au + " " + d.b + d.bu; }
 function dowKo(d){ return ["일","월","화","수","목","금","토"][d.getDay()]; }
-
-function readLocal(){
-  try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch(e){ return {}; }
-}
-function writeLocal(obj){
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch(e){}
-}
-function loadLocalIntoDays(){
-  var raw = readLocal();
-  DAYS.clear();
-  var days = raw.days || {};
-  Object.keys(days).forEach(function(k){ DAYS.set(k, days[k]); });
-  if (raw.baby) BABY = { name: raw.baby.name || "", birth: raw.baby.birth || "" };
-}
-function saveAllLocal(){
-  var days = {};
-  DAYS.forEach(function(v, k){ days[k] = v; });
-  writeLocal({ days:days, baby:BABY });
-}
-function mkId(t){ return t.toString(36) + "-" + Math.random().toString(36).slice(2, 7); }
-
-function enqueue(fn){
-  writeQ = writeQ.catch(function(){}).then(fn);
-  return writeQ;
-}
-
-function applyLocalPatch(k, id, patch){
-  var day = DAYS.get(k) || { date:k, events:{} };
-  var cur = day.events[id] || {};
-  var next = {};
-  Object.keys(cur).forEach(function(f){ next[f] = cur[f]; });
-  Object.keys(patch).forEach(function(f){ next[f] = patch[f]; });
-  var events = {};
-  Object.keys(day.events).forEach(function(f){ events[f] = day.events[f]; });
-  events[id] = next;
-  DAYS.set(k, { date:k, events:events });
-  if (!usingDb) saveAllLocal();
-}
-function putEvent(ev){
-  var k = dayKey(ev.t), id = mkId(ev.t);
-  applyLocalPatch(k, id, ev);
-  render();
-  enqueue(function(){ return persist(k, id, ev); });
-  return id;
-}
-function patchEvent(k, id, patch){
-  applyLocalPatch(k, id, patch);
-  render();
-  enqueue(function(){ return persist(k, id, patch); });
-}
-function persist(k, id, patch){
-  if (!usingDb || !db) { saveAllLocal(); return Promise.resolve(); }
-  var ref = db.doc("days/" + k);
-  var body = {}; body[id] = patch;
-  return ref.update({ events: body }).catch(function(err){
-    if (err && err.code === "invalid_argument") {
-      var day = DAYS.get(k) || { date:k, events:{} };
-      return ref.set({ date:k, events:day.events });
-    }
-    throw err;
-  }).catch(function(err){ toast(errText(err)); });
-}
-function errText(err){
-  var c = err && err.code;
-  if (c === "quota_exceeded") return "저장 공간이 찼습니다. 오래된 날짜를 정리해 주세요.";
-  if (c === "resource_exhausted") return "요청이 몰렸습니다. 잠시 후 다시 눌러 주세요.";
-  if (c === "revoked" || c === "not_granted") return "공유 저장소에 접근할 수 없어 이 기기에만 남습니다.";
-  return "저장하지 못했습니다. 다시 눌러 주세요.";
-}
-
-function eventsOf(k){
-  var day = DAYS.get(k);
-  if (!day) return [];
-  var evs = day.events || {};
-  return Object.keys(evs).map(function(id){
-    var e = evs[id] || {}, o = { id:id, day:k };
-    Object.keys(e).forEach(function(f){ o[f] = e[f]; });
-    return o;
-  }).filter(function(e){ return !e.del && typeof e.t === "number"; })
-    .sort(function(a,b){ return b.t - a.t; });
-}
-function allEvents(){
-  var out = [];
-  DAYS.forEach(function(_, k){ out = out.concat(eventsOf(k)); });
-  return out.sort(function(a,b){ return b.t - a.t; });
-}
-function lastOf(kind){
-  var all = allEvents();
-  for (var i = 0; i < all.length; i++) if (all[i].k === kind) return all[i];
-  return null;
-}
-function runningSleep(){
-  var all = allEvents();
-  for (var i = 0; i < all.length; i++) if (all[i].k === "sleep" && !all[i].end) return all[i];
-  return null;
-}
-function dplus(k){
-  if (!BABY.birth) return null;
-  var n = Math.round((keyToDate(k) - keyToDate(BABY.birth)) / DAY) + 1;
-  return n >= 1 ? n : null;
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
+  });
 }
 
 var FEED_KIND = { L:"왼쪽 젖", R:"오른쪽 젖", bottle:"분유", pump:"유축 모유" };
 var POO_COLOR = { yellow:"노란색", green:"초록색", brown:"갈색", black:"검은색", white:"흰색", red:"붉은색" };
-var POO_FLAG = { black:1, white:1, red:1 };
-var ETC_TAG = { bath:"목욕", vitd:"비타민D", weight:"몸무게", temp:"체온", note:"메모" };
+var POO_FLAG  = { black:1, white:1, red:1 };
+var ETC_TAG   = { bath:"목욕", vitd:"비타민D", weight:"몸무게", temp:"체온", note:"메모" };
 
 function label(e){
-  if (e.k === "feed") return e.m ? FEED_KIND[e.m] : "수유";
+  if (e.k === "feed")   return e.m ? FEED_KIND[e.m] : "수유";
   if (e.k === "diaper") return e.pee && e.poo ? "소변 + 대변" : e.poo ? "대변" : "소변";
-  if (e.k === "sleep") return e.end ? "수면" : "자는 중";
+  if (e.k === "sleep")  return e.end ? "수면" : "자는 중";
   return ETC_TAG[e.tag] || "기록";
 }
 function detail(e){
@@ -414,39 +303,142 @@ function detail(e){
                  : durText(Date.now() - e.t) + " 경과");
   } else {
     if (e.tag === "weight" && e.val) p.push(e.val + " g");
-    if (e.tag === "temp" && e.val) p.push(e.val + " C");
+    if (e.tag === "temp"   && e.val) p.push(e.val + " C");
     if (e.note) p.push(e.note);
   }
   return p.join(" · ");
 }
-function esc(s){
-  return String(s).replace(/[&<>"]/g, function(c){
-    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
-  });
+
+// ---------- 행 <-> 이벤트 ----------
+function rowToEv(r){
+  var p = r.payload || {};
+  var ev = { id:r.id, t:Date.parse(r.at), k:r.kind, by:r.created_by };
+  if (r.kind === "sleep") ev.end = r.ends_at ? Date.parse(r.ends_at) : null;
+  Object.keys(p).forEach(function(k){ ev[k] = p[k]; });
+  return ev;
+}
+function evToRow(ev){
+  var payload = {}, skip = { id:1, t:1, k:1, end:1, by:1 };
+  Object.keys(ev).forEach(function(k){ if (!skip[k]) payload[k] = ev[k]; });
+  return {
+    baby_id: BABY.id, household_id: HH.id, kind: ev.k,
+    at: new Date(ev.t).toISOString(),
+    ends_at: ev.end ? new Date(ev.end).toISOString() : null,
+    payload: payload, created_by: SESSION.user.id
+  };
 }
 
-function render(){ renderHeader(); renderTiles(); renderSummary(); renderLog(); renderBar(); }
+// ---------- 오프라인 큐 ----------
+function queueRead(){ try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch(e){ return []; } }
+function queueWrite(q){ try { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); } catch(e){} }
+function queuePush(job){ var q = queueRead(); q.push(job); queueWrite(q); renderMode(); }
+
+async function queueFlush(){
+  var q = queueRead();
+  if (!q.length || !sb || !HH) return;
+  var left = [], sent = 0;
+  for (var i = 0; i < q.length; i++) {
+    var job = q[i], err = null;
+    try {
+      if (job.op === "insert")      err = (await sb.from("events").insert(job.row)).error;
+      else if (job.op === "update") err = (await sb.from("events").update(job.patch).eq("id", job.id)).error;
+    } catch (e) { err = e; }
+    if (err) left.push(job); else sent++;
+  }
+  queueWrite(left);
+  if (sent) await loadEvents();
+  renderMode();
+}
+
+// ---------- 쓰기 ----------
+async function addEvent(ev){
+  var row = evToRow(ev);
+  var tmp = "tmp-" + Math.random().toString(36).slice(2);
+  EVENTS = [Object.assign({}, ev, { id:tmp, by:SESSION.user.id })].concat(EVENTS)
+             .sort(function(a,b){ return b.t - a.t; });
+  render();
+  var res = await sb.from("events").insert(row).select().single();
+  EVENTS = EVENTS.filter(function(e){ return e.id !== tmp; });
+  if (res.error) {
+    queuePush({ op:"insert", row:row });
+    EVENTS = [Object.assign({}, ev, { id:tmp, by:SESSION.user.id })].concat(EVENTS)
+               .sort(function(a,b){ return b.t - a.t; });
+    render();
+    toast("오프라인 — 이 기기에 보관했다가 올립니다");
+  } else {
+    EVENTS = [rowToEv(res.data)].concat(EVENTS).sort(function(a,b){ return b.t - a.t; });
+    render();
+  }
+}
+async function patchEvent(id, patch){
+  var i = -1;
+  for (var j = 0; j < EVENTS.length; j++) if (EVENTS[j].id === id) { i = j; break; }
+  if (i >= 0) { EVENTS[i] = Object.assign({}, EVENTS[i], patch); render(); }
+  if (String(id).indexOf("tmp-") === 0) return;
+  var row = { updated_at: new Date().toISOString() };
+  if ("end" in patch) row.ends_at = patch.end ? new Date(patch.end).toISOString() : null;
+  if (patch.deleted)  row.deleted_at = new Date().toISOString();
+  var res = await sb.from("events").update(row).eq("id", id);
+  if (res.error) { queuePush({ op:"update", id:id, patch:row }); toast("오프라인 — 이 기기에 보관했다가 올립니다"); }
+}
+
+// ---------- 읽기 ----------
+async function loadEvents(){
+  if (!sb || !BABY) return;
+  var since = new Date(Date.now() - 21 * DAY).toISOString();
+  var res = await sb.from("events")
+    .select("id,kind,at,ends_at,payload,created_by")
+    .eq("baby_id", BABY.id).is("deleted_at", null)
+    .gte("at", since).order("at", { ascending:false }).limit(2000);
+  if (res.error) { renderMode("불러오지 못했습니다: " + res.error.message); return; }
+  EVENTS = (res.data || []).map(rowToEv);
+  render();
+}
+function subscribeRealtime(){
+  if (!sb || !HH) return;
+  try {
+    if (channel) sb.removeChannel(channel);
+    channel = sb.channel("ev-" + HH.id)
+      .on("postgres_changes",
+          { event:"*", schema:"public", table:"events", filter:"household_id=eq." + HH.id },
+          function(){ loadEvents(); })
+      .subscribe();
+  } catch (e) { /* 실시간이 없어도 동작한다 — 화면 복귀 시 다시 읽는다 */ }
+}
+
+function eventsOf(k){ return EVENTS.filter(function(e){ return dayKey(e.t) === k; }); }
+function lastOf(kind){
+  for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].k === kind) return EVENTS[i];
+  return null;
+}
+function runningSleep(){
+  for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].k === "sleep" && !EVENTS[i].end) return EVENTS[i];
+  return null;
+}
+function dplus(k){
+  if (!BABY || !BABY.birth_date) return null;
+  var n = Math.round((keyToDate(k) - keyToDate(BABY.birth_date)) / DAY) + 1;
+  return n >= 1 ? n : null;
+}
+
+// ---------- 렌더 ----------
+function render(){ renderHeader(); renderTiles(); renderSummary(); renderLog(); renderBar(); renderMode(); }
 
 function renderHeader(){
-  document.getElementById("baby-name").textContent = BABY.name || "아기 이름 설정";
+  document.getElementById("baby-name").textContent = (BABY && BABY.name) || "아기 이름 설정";
   var dp = dplus(viewKey), el = document.getElementById("baby-dplus");
   if (dp) { el.textContent = "D+" + dp; el.hidden = false; } else { el.hidden = true; }
-
   var d = keyToDate(viewKey), today = dayKey(Date.now());
   var rel = viewKey === today ? "오늘"
           : viewKey === dayKey(Date.now() - DAY) ? "어제" : dowKo(d) + "요일";
   document.getElementById("view-date").textContent = (d.getMonth()+1) + "월 " + d.getDate() + "일 · " + rel;
   document.getElementById("next-day").disabled = viewKey >= today;
 }
-
 function tile(kind, cls, name, last){
-  if (!last) {
-    return '<div class="tile none"><span class="tile-k">' + name +
-           '</span><div class="tile-v">기록 없음</div></div>';
-  }
+  if (!last) return '<div class="tile none"><span class="tile-k">' + name +
+                    '</span><div class="tile-v">기록 없음</div></div>';
   var running = kind === "sleep" && !last.end;
-  var since = Date.now() - last.t;
-  var d = dur(since);
+  var since = Date.now() - last.t, d = dur(since);
   var warn = kind === "feed" && since > 3 * 3600000;
   var sub = running ? "자는 중" : hhmm(last.t) + " · " + label(last);
   return '<div class="tile ' + cls + (warn ? " warn" : "") + (running ? " live" : "") + '">' +
@@ -456,13 +448,12 @@ function tile(kind, cls, name, last){
     '<div class="tile-s">' + esc(sub) + '</div></div>';
 }
 function renderTiles(){
-  var sleeping = runningSleep();
+  var s = runningSleep();
   document.getElementById("tiles").innerHTML =
     tile("feed", "t-feed", "마지막 수유", lastOf("feed")) +
     tile("diaper", "t-diaper", "마지막 기저귀", lastOf("diaper")) +
-    tile("sleep", "t-sleep", sleeping ? "자기 시작" : "마지막 수면", sleeping || lastOf("sleep"));
+    tile("sleep", "t-sleep", s ? "자기 시작" : "마지막 수면", s || lastOf("sleep"));
 }
-
 function renderSummary(){
   var ev = eventsOf(viewKey);
   var feeds = ev.filter(function(e){ return e.k === "feed"; });
@@ -470,17 +461,14 @@ function renderSummary(){
   var pee = 0, poo = 0;
   ev.forEach(function(e){ if (e.k === "diaper") { if (e.pee) pee++; if (e.poo) poo++; } });
   var sleepMs = ev.filter(function(e){ return e.k === "sleep"; })
-    .reduce(function(s,e){ return s + ((e.end || Date.now()) - e.t); }, 0);
+                  .reduce(function(s,e){ return s + ((e.end || Date.now()) - e.t); }, 0);
   var sd = dur(sleepMs);
-
   function pips(n, goal){
     var out = '<div class="pips">';
     for (var i = 0; i < goal; i++) out += '<i class="pip' + (i < n ? " on" : "") + '"></i>';
     return out + "</div>";
   }
-  var dp = dplus(viewKey);
-  var showGoal = dp === null || dp >= 5;
-
+  var dp = dplus(viewKey), showGoal = dp === null || dp >= 5;
   var html =
     '<div class="sum-i"><span class="sum-k">수유</span><div class="sum-v mono">' + feeds.length +
       '<span>회</span></div>' + (ml ? '<div class="sum-k mono" style="margin-top:3px">' + ml + ' ml</div>' : '') + '</div>' +
@@ -490,7 +478,6 @@ function renderSummary(){
       '<span>회</span></div>' + (showGoal ? pips(poo, 3) : '') + '</div>' +
     '<div class="sum-i"><span class="sum-k">총 수면</span><div class="sum-v mono">' + sd.a +
       '<span>' + sd.au + '</span>' + (sd.b !== null ? ' ' + sd.b + '<span>분</span>' : '') + '</div></div>';
-
   if (showGoal) {
     var ok = pee >= 6 && poo >= 3;
     html += '<div class="sum-note">' + (ok
@@ -499,53 +486,41 @@ function renderSummary(){
   }
   document.getElementById("sum").innerHTML = html;
 }
-
 function renderLog(){
   var ev = eventsOf(viewKey), log = document.getElementById("log");
   var today = dayKey(Date.now()), vd = keyToDate(viewKey);
   document.getElementById("log-title").textContent =
     viewKey === today ? "오늘 기록" : (vd.getMonth()+1) + "/" + vd.getDate() + " 기록";
   document.getElementById("log-count").textContent = ev.length ? ev.length + "건" : "";
-
   if (!ev.length) {
-    var any = allEvents().length;
     log.innerHTML = '<li><div class="empty">' +
-      (any ? '이 날짜에는 기록이 없습니다.'
-           : '아직 기록이 없습니다. 아래 버튼을 누르면 실제 기록이 시작됩니다. 밑의 세 줄은 화면이 어떻게 보이는지 보여 주는 <b>예시</b>입니다.') +
-      '</div></li>' + (any ? "" : demoRows());
+      (viewKey === today ? '아직 오늘 기록이 없습니다. 아래 버튼을 누르면 시작됩니다.'
+                         : '이 날짜에는 기록이 없습니다.') + '</div></li>';
     return;
   }
   log.innerHTML = ev.map(function(e){
     var d = detail(e);
     var flagged = e.k === "diaper" && e.poo && POO_FLAG[e.color];
+    var who = (e.by && SESSION && e.by !== SESSION.user.id) ? ' <span class="r-who">· 가족</span>' : '';
     return '<li><div class="row' + (e.k === "sleep" && !e.end ? " running" : "") + '">' +
       '<div class="r-t mono">' + hhmm(e.t) + '</div>' +
       '<div class="r-d k-' + e.k + '"></div>' +
-      '<div class="r-b"><div class="r-l">' + label(e) + '</div>' +
+      '<div class="r-b"><div class="r-l">' + label(e) + who + '</div>' +
       (d ? '<div class="r-s' + (flagged ? " flag" : "") + '">' + esc(d) + '</div>' : '') + '</div>' +
       '<button class="r-x" data-del="' + e.id + '" aria-label="삭제">&times;</button></div></li>';
-  }).join("");
-}
-function demoRows(){
-  var now = Date.now();
-  var rows = [
-    { t: now - 95*60000, k:"feed", m:"L", min:15, burp:true },
-    { t: now - 150*60000, k:"diaper", pee:true, poo:true, color:"yellow" },
-    { t: now - 210*60000, k:"sleep", end: now - 120*60000 }
-  ];
-  return rows.map(function(e, i){
-    return '<li class="demo"><div class="row">' +
-      '<div class="r-t mono">' + hhmm(e.t) + '</div>' +
-      '<div class="r-d k-' + e.k + '"></div>' +
-      '<div class="r-b"><div class="r-l">' + label(e) +
-      (i === 0 ? '<span class="demo-tag">예시</span>' : '') + '</div>' +
-      '<div class="r-s">' + detail(e) + '</div></div><span></span></div></li>';
   }).join("");
 }
 function renderBar(){
   var s = runningSleep(), btn = document.getElementById("act-sleep");
   btn.classList.toggle("on", !!s);
   btn.querySelector("span").textContent = s ? "깼어요" : "재우기";
+}
+function renderMode(msg){
+  var el = document.getElementById("mode"), n = queueRead().length;
+  el.classList.toggle("warn", !!(n || msg));
+  el.textContent = msg ? msg
+    : n ? "전송 대기 " + n + "건 — 연결되면 자동으로 올립니다"
+    : (HH ? HH.name + " · 함께 보는 사람과 실시간으로 공유됩니다" : "");
 }
 
 function toast(msg){
@@ -557,7 +532,6 @@ function toast(msg){
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ el.remove(); }, 2600);
 }
-
 function openSheet(html, onMount){
   closeSheet();
   var veil = document.createElement("div");
@@ -612,8 +586,7 @@ function feedSheet(){
         amt.hidden = false;
         var breast = v === "L" || v === "R";
         al.textContent = breast ? "얼마나 물렸나요 (분)" : "얼마나 먹었나요 (ml)";
-        av.placeholder = breast ? "분" : "ml";
-        av.value = "";
+        av.placeholder = breast ? "분" : "ml"; av.value = "";
         aq.innerHTML = (breast ? [5,10,15,20,25] : [30,60,90,120,150]).map(function(n){
           return '<button class="chip sm" data-v="' + n + '">' + n + '</button>';
         }).join("");
@@ -631,14 +604,13 @@ function feedSheet(){
         }
         if (root.querySelector("#burp").classList.contains("sel")) ev.burp = true;
         if (root.querySelector("#spit").classList.contains("sel")) ev.spit = true;
-        putEvent(ev); closeSheet(); toast("수유 " + hhmm(ev.t) + " 기록됨");
+        closeSheet(); addEvent(ev); toast("수유 " + hhmm(ev.t) + " 기록됨");
       }
       root.querySelector("#go").addEventListener("click", function(){ save(true); });
       root.querySelector("#skip").addEventListener("click", function(){ save(false); });
     }
   );
 }
-
 function diaperSheet(){
   openSheet(
     '<h2>기저귀 기록</h2>' +
@@ -657,10 +629,7 @@ function diaperSheet(){
     '<button class="save" id="go" disabled>기록하기</button>',
     function(root){
       var col = root.querySelector("#col"), hint = root.querySelector("#ch"), go = root.querySelector("#go");
-      chipGroup(root, "#dk .chip", function(v){
-        col.hidden = !(v === "poo" || v === "both");
-        go.disabled = !v;
-      });
+      chipGroup(root, "#dk .chip", function(v){ col.hidden = !(v === "poo" || v === "both"); go.disabled = !v; });
       chipGroup(root, "#col .chip", function(v){ hint.hidden = !POO_FLAG[v]; });
       go.addEventListener("click", function(){
         var v = picked(root, "#dk .chip");
@@ -668,12 +637,11 @@ function diaperSheet(){
         var ev = { k:"diaper", t:Date.now(), pee:v !== "poo", poo:v !== "pee" };
         var c = picked(root, "#col .chip");
         if (c && ev.poo) ev.color = c;
-        putEvent(ev); closeSheet(); toast(label(ev) + " " + hhmm(ev.t) + " 기록됨");
+        closeSheet(); addEvent(ev); toast(label(ev) + " " + hhmm(ev.t) + " 기록됨");
       });
     }
   );
 }
-
 function etcSheet(){
   openSheet(
     '<h2>기타 기록</h2>' +
@@ -696,7 +664,7 @@ function etcSheet(){
         vf.hidden = !(v === "weight" || v === "temp");
         nf.hidden = v !== "note";
         if (v === "weight") { vl.textContent = "몸무게 (g)"; vv.placeholder = "3400"; }
-        if (v === "temp") { vl.textContent = "체온 (C)"; vv.placeholder = "36.8"; }
+        if (v === "temp")   { vl.textContent = "체온 (C)";  vv.placeholder = "36.8"; }
       });
       go.addEventListener("click", function(){
         var tag = picked(root, "#ek .chip");
@@ -708,33 +676,75 @@ function etcSheet(){
           var txt = root.querySelector("#nv").value.trim();
           if (txt) ev.note = txt.slice(0, 200);
         }
-        putEvent(ev); closeSheet(); toast(ETC_TAG[tag] + " 기록됨");
+        closeSheet(); addEvent(ev); toast(ETC_TAG[tag] + " 기록됨");
       });
     }
   );
 }
 
-function babySheet(){
+function rpcMsg(err){
+  var m = (err && (err.message || "")) + "";
+  if (m.indexOf("invalid_code") >= 0)      return "코드가 맞지 않거나 만료되었습니다";
+  if (m.indexOf("too_many_attempts") >= 0) return "시도가 너무 많습니다. 1시간 뒤에 다시 해 주세요";
+  if (m.indexOf("not_activated") >= 0)     return "관리자 키로 먼저 활성화해야 합니다";
+  if (m.indexOf("not_owner") >= 0)         return "주 보호자만 할 수 있습니다";
+  if (m.indexOf("not_member") >= 0)        return "이 가정의 구성원이 아닙니다";
+  return m || "요청을 처리하지 못했습니다";
+}
+
+function settingsSheet(){
   openSheet(
-    '<h2>아기 정보</h2>' +
-    '<div class="fld"><label>이름 또는 태명</label>' +
-      '<input class="num" id="bn" type="text" maxlength="20" placeholder="예: 봄이"></div>' +
-    '<div class="fld"><label>생년월일 — D+ 일수 계산에 씁니다</label>' +
+    '<h2>설정</h2>' +
+    '<div class="fld"><label>아기</label>' +
+      '<input class="num" id="bn" type="text" maxlength="20" placeholder="이름 또는 태명" style="margin-bottom:7px">' +
       '<input class="num" id="bd" type="date"></div>' +
-    '<button class="save" id="go">저장</button>',
-    function(root){
-      root.querySelector("#bn").value = BABY.name || "";
-      root.querySelector("#bd").value = BABY.birth || "";
-      root.querySelector("#go").addEventListener("click", function(){
-        BABY = {
-          name: root.querySelector("#bn").value.trim().slice(0, 20),
-          birth: root.querySelector("#bd").value || ""
-        };
-        if (usingDb && db) {
-          var snapshot = { name:BABY.name, birth:BABY.birth };
-          enqueue(function(){ return db.doc("settings/baby").set(snapshot).catch(function(e){ toast(errText(e)); }); });
-        } else { saveAllLocal(); }
-        closeSheet(); render(); toast("저장했습니다");
+    '<button class="save" id="save-baby">아기 정보 저장</button>' +
+    '<div class="fld" style="margin-top:24px"><label>가족 초대 코드 — 배우자·조부모에게 알려 주세요</label>' +
+      '<div class="codebox" id="inv">불러오는 중…</div>' +
+      '<button class="chip" id="rot" style="width:100%">새 코드로 바꾸기 (기존 코드 폐기)</button></div>' +
+    '<div class="fld" style="margin-top:24px"><label>다른 가정에 합류</label>' +
+      '<input class="num" id="jc" placeholder="초대 코드" maxlength="12" autocapitalize="characters"></div>' +
+    '<button class="chip" id="join" style="width:100%">합류하기</button>' +
+    '<button class="ghost" id="logout" style="margin-top:22px">로그아웃</button>' +
+    '<button class="ghost danger" id="leave">이 가정에서 나가기 / 기록 전체 삭제</button>' +
+    '<div class="note">기록은 이 가정에 속한 사람만 볼 수 있습니다. 주 보호자가 나가면 아기 정보와 모든 기록이 함께 삭제되며 되돌릴 수 없습니다.</div>',
+    async function(root){
+      root.querySelector("#bn").value = (BABY && BABY.name) || "";
+      root.querySelector("#bd").value = (BABY && BABY.birth_date) || "";
+
+      root.querySelector("#save-baby").addEventListener("click", async function(){
+        var name = root.querySelector("#bn").value.trim().slice(0, 20);
+        var bd = root.querySelector("#bd").value || null;
+        var r = await sb.from("babies").update({ name:name, birth_date:bd }).eq("id", BABY.id).select().single();
+        if (r.error) { toast("저장 실패: " + r.error.message); return; }
+        BABY = r.data; closeSheet(); render(); toast("저장했습니다");
+      });
+
+      var box = root.querySelector("#inv");
+      var c = await sb.from("codes").select("code").eq("household_id", HH.id)
+                      .eq("type", "join").eq("revoked", false).limit(1);
+      box.textContent = (c.data && c.data[0]) ? c.data[0].code : "주 보호자만 볼 수 있습니다";
+
+      root.querySelector("#rot").addEventListener("click", async function(){
+        var r = await sb.rpc("rotate_invite", { hh: HH.id });
+        if (r.error) { toast(rpcMsg(r.error)); return; }
+        box.textContent = r.data; toast("새 코드를 발급했습니다");
+      });
+      root.querySelector("#join").addEventListener("click", async function(){
+        var code = root.querySelector("#jc").value.trim();
+        if (!code) return;
+        var r = await sb.rpc("redeem_code", { input_code: code });
+        if (r.error) { toast(rpcMsg(r.error)); return; }
+        closeSheet(); toast("합류했습니다"); await bootHousehold();
+      });
+      root.querySelector("#logout").addEventListener("click", async function(){
+        await sb.auth.signOut(); location.reload();
+      });
+      root.querySelector("#leave").addEventListener("click", async function(){
+        if (!window.confirm("정말 나가시겠습니까? 주 보호자라면 아기 정보와 모든 기록이 삭제되며 되돌릴 수 없습니다.")) return;
+        var r = await sb.rpc("leave_household", { hh: HH.id });
+        if (r.error) { toast(rpcMsg(r.error)); return; }
+        location.reload();
       });
     }
   );
@@ -743,31 +753,26 @@ function babySheet(){
 document.querySelectorAll("[data-open]").forEach(function(b){
   b.addEventListener("click", function(){
     var w = b.getAttribute("data-open");
-    if (w === "feed") feedSheet();
-    else if (w === "diaper") diaperSheet();
-    else etcSheet();
+    if (w === "feed") feedSheet(); else if (w === "diaper") diaperSheet(); else etcSheet();
   });
 });
 document.getElementById("act-sleep").addEventListener("click", function(){
   var s = runningSleep();
-  if (s) {
-    var end = Date.now();
-    patchEvent(s.day, s.id, { end:end });
-    toast("수면 " + durText(end - s.t) + " 기록됨");
-  } else {
-    var ev = { k:"sleep", t:Date.now(), end:null };
-    putEvent(ev); toast("재우기 시작 " + hhmm(ev.t));
-  }
+  if (s) { var end = Date.now(); patchEvent(s.id, { end:end }); toast("수면 " + durText(end - s.t) + " 기록됨"); }
+  else   { var ev = { k:"sleep", t:Date.now(), end:null }; addEvent(ev); toast("재우기 시작 " + hhmm(ev.t)); }
 });
-document.getElementById("btn-baby").addEventListener("click", babySheet);
+document.getElementById("btn-settings").addEventListener("click", settingsSheet);
 document.getElementById("log").addEventListener("click", function(e){
   var b = e.target.closest("[data-del]");
   if (!b) return;
   var id = b.getAttribute("data-del");
-  var hit = eventsOf(viewKey).filter(function(x){ return x.id === id; })[0];
+  var hit = null;
+  for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].id === id) { hit = EVENTS[i]; break; }
   if (!hit) return;
   if (!window.confirm(hhmm(hit.t) + " " + label(hit) + " 기록을 지울까요?")) return;
-  patchEvent(viewKey, id, { del:1 });
+  patchEvent(id, { deleted:true });
+  EVENTS = EVENTS.filter(function(x){ return x.id !== id; });
+  render();
   toast("삭제했습니다");
 });
 document.getElementById("prev-day").addEventListener("click", function(){
@@ -778,59 +783,189 @@ document.getElementById("next-day").addEventListener("click", function(){
   if (n > Date.now()) return;
   viewKey = dayKey(n); render();
 });
+document.addEventListener("visibilitychange", function(){
+  if (!document.hidden && HH) { queueFlush(); loadEvents(); }
+});
+window.addEventListener("online", function(){ queueFlush(); });
 
-loadLocalIntoDays();
-render();
-setInterval(function(){ if (!sheet) { renderTiles(); renderSummary(); } }, 15000);
+// ---------- 관문 ----------
+function gate(html, onMount){
+  document.getElementById("app").hidden = true;
+  document.getElementById("gate").hidden = false;
+  var body = document.getElementById("gate-body");
+  body.innerHTML = html;
+  if (onMount) onMount(body);
+}
+function showApp(){
+  document.getElementById("gate").hidden = true;
+  document.getElementById("app").hidden = false;
+  render();
+  if (!tickTimer) tickTimer = setInterval(function(){
+    if (!sheet) { renderTiles(); renderSummary(); }
+  }, 15000);
+}
 
-function setMode(t){ document.getElementById("mode").textContent = t; }
-setMode("이 기기에 저장 중 — 공유 저장소를 확인하고 있습니다");
-
-(async function(){
-  try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; }
-  catch (e) { db = null; }
-  if (!db) {
-    setMode("이 기기에만 저장됩니다. 다른 기기와는 공유되지 않습니다.");
-    return;
-  }
-  usingDb = true;
-  setMode("이 링크를 여는 사람과 실시간으로 공유됩니다.");
-
-  var pending = readLocal();
-  var pendingDays = pending.days || {};
-
-  unsubs.push(db.collection("days").orderBy("date", "desc").limit(21).onSnapshot(function(snap){
-    DAYS.clear();
-    snap.docs.forEach(function(d){
-      var body = d.data() || {};
-      DAYS.set(d.id, { date:d.id, events:body.events || {} });
-    });
-    render();
-  }, function(err){ toast(errText(err)); }));
-
-  unsubs.push(db.doc("settings/baby").onSnapshot(function(d){
-    if (!d.exists) return;
-    var b = d.data() || {};
-    BABY = { name:b.name || "", birth:b.birth || "" };
-    render();
-  }, function(){}));
-
-  var keys = Object.keys(pendingDays);
-  if (keys.length) {
-    keys.forEach(function(k){
-      var evs = (pendingDays[k] || {}).events || {};
-      Object.keys(evs).forEach(function(id){
-        enqueue(function(){ return persist(k, id, evs[id]); });
+function authScreen(mode){
+  var isUp = mode === "up";
+  gate(
+    '<h1>' + (isUp ? "계정 만들기" : "다시 오셨네요") + '</h1>' +
+    '<p class="sub">' + (isUp
+      ? "가입하려면 관리자에게 받은 키가 필요합니다. 계정을 만든 다음 키를 넣게 됩니다."
+      : "수유·기저귀·수면을 기록하고 가족과 함께 봅니다.") + '</p>' +
+    '<div class="field"><label>이메일</label><input class="inp" id="em" type="email" autocomplete="email" inputmode="email"></div>' +
+    '<div class="field"><label>비밀번호</label><input class="inp" id="pw" type="password" autocomplete="' +
+      (isUp ? "new-password" : "current-password") + '"></div>' +
+    '<button class="btn" id="go">' + (isUp ? "가입하기" : "로그인") + '</button>' +
+    '<button class="linky" id="swap">' + (isUp ? "이미 계정이 있어요 · 로그인" : "처음이신가요? 계정 만들기") + '</button>' +
+    '<div class="err" id="err" hidden></div>' +
+    (isUp ? '<div class="note">비밀번호 재설정 메일이 나가지 않는 설정입니다. 비밀번호를 잊으면 관리자에게 문의해 주세요.</div>' : ''),
+    function(b){
+      var err = b.querySelector("#err");
+      function fail(m){ err.textContent = m; err.hidden = false; }
+      b.querySelector("#swap").addEventListener("click", function(){ authScreen(isUp ? "in" : "up"); });
+      b.querySelector("#go").addEventListener("click", async function(){
+        var email = b.querySelector("#em").value.trim(), pw = b.querySelector("#pw").value;
+        if (!email || !pw) return fail("이메일과 비밀번호를 입력해 주세요.");
+        if (isUp && pw.length < 8) return fail("비밀번호는 8자 이상으로 해 주세요.");
+        this.disabled = true;
+        var r = isUp ? await sb.auth.signUp({ email:email, password:pw })
+                     : await sb.auth.signInWithPassword({ email:email, password:pw });
+        this.disabled = false;
+        if (r.error) {
+          var m = r.error.message || "";
+          if (m.indexOf("Invalid login") >= 0) return fail("이메일 또는 비밀번호가 맞지 않습니다.");
+          if (m.indexOf("already registered") >= 0) return fail("이미 가입된 이메일입니다. 로그인해 주세요.");
+          if (m.indexOf("rate limit") >= 0) return fail("잠시 후 다시 시도해 주세요.");
+          return fail(m);
+        }
+        if (!r.data.session) return fail("메일 인증이 필요한 설정입니다. 관리자에게 문의해 주세요.");
+        boot();
       });
-    });
-    if (pending.baby && (pending.baby.name || pending.baby.birth)) {
-      var pb = { name:pending.baby.name || "", birth:pending.baby.birth || "" };
-      enqueue(function(){ return db.doc("settings/baby").set(pb).catch(function(){}); });
+      b.querySelector("#pw").addEventListener("keydown", function(e){
+        if (e.key === "Enter") b.querySelector("#go").click();
+      });
     }
-    enqueue(function(){ try { localStorage.removeItem(STORE_KEY); } catch(e){} });
-    toast("이 기기에 있던 " + keys.length + "일치 기록을 올렸습니다");
-  }
-})();
+  );
+}
+
+function activateScreen(){
+  gate(
+    '<h1>관리자 키를 입력해 주세요</h1>' +
+    '<p class="sub">이 기록장은 초대받은 분만 쓸 수 있습니다. 배포하신 분께 받은 8자리 키를 넣어 주세요. 가족 초대 코드를 받으셨다면 그 코드를 넣어도 됩니다.</p>' +
+    '<div class="field"><input class="inp code" id="ck" maxlength="12" autocapitalize="characters" autocomplete="off"></div>' +
+    '<button class="btn" id="go">확인</button>' +
+    '<button class="linky" id="out">다른 계정으로 로그인</button>' +
+    '<div class="err" id="err" hidden></div>',
+    function(b){
+      var err = b.querySelector("#err");
+      b.querySelector("#out").addEventListener("click", async function(){ await sb.auth.signOut(); boot(); });
+      b.querySelector("#go").addEventListener("click", async function(){
+        var code = b.querySelector("#ck").value.trim();
+        if (!code) return;
+        this.disabled = true;
+        var r = await sb.rpc("redeem_code", { input_code: code });
+        this.disabled = false;
+        if (r.error) { err.textContent = rpcMsg(r.error); err.hidden = false; return; }
+        boot();
+      });
+      b.querySelector("#ck").addEventListener("keydown", function(e){
+        if (e.key === "Enter") b.querySelector("#go").click();
+      });
+    }
+  );
+}
+
+function householdScreen(){
+  gate(
+    '<h1>아기를 등록해 주세요</h1>' +
+    '<p class="sub">가정을 하나 만들면 그 안에 기록이 쌓입니다. 배우자나 조부모는 나중에 초대 코드로 합류할 수 있습니다.</p>' +
+    '<div class="field"><label>아기 이름 또는 태명</label><input class="inp" id="bn" maxlength="20" placeholder="예: 봄이"></div>' +
+    '<div class="field"><label>생년월일 — D+ 일수 계산에 씁니다</label><input class="inp" id="bd" type="date"></div>' +
+    '<button class="btn" id="go">시작하기</button>' +
+    '<div class="note">이미 가족이 만든 가정이 있다면 초대 코드를 받아 아래에 넣어 주세요.</div>' +
+    '<div class="field" style="margin-top:12px"><input class="inp code" id="jc" maxlength="12" placeholder="초대 코드" autocapitalize="characters"></div>' +
+    '<button class="btn alt" id="join">초대 코드로 합류</button>' +
+    '<div class="err" id="err" hidden></div>',
+    function(b){
+      var err = b.querySelector("#err");
+      function fail(m){ err.textContent = m; err.hidden = false; }
+      b.querySelector("#go").addEventListener("click", async function(){
+        var name = b.querySelector("#bn").value.trim().slice(0, 20);
+        var bd = b.querySelector("#bd").value || null;
+        this.disabled = true;
+        var r = await sb.rpc("create_household", {
+          hh_name: (name || "우리") + "네", baby_name: name, baby_birth: bd
+        });
+        this.disabled = false;
+        if (r.error) return fail(rpcMsg(r.error));
+        bootHousehold();
+      });
+      b.querySelector("#join").addEventListener("click", async function(){
+        var code = b.querySelector("#jc").value.trim();
+        if (!code) return;
+        this.disabled = true;
+        var r = await sb.rpc("redeem_code", { input_code: code });
+        this.disabled = false;
+        if (r.error) return fail(rpcMsg(r.error));
+        bootHousehold();
+      });
+    }
+  );
+}
+
+function fatal(msg){
+  gate('<h1>연결하지 못했습니다</h1><p class="sub">' + esc(msg) + '</p>' +
+       '<button class="btn" id="rl">다시 시도</button>',
+       function(b){ b.querySelector("#rl").addEventListener("click", function(){ location.reload(); }); });
+}
+
+// ---------- 부팅 ----------
+async function bootHousehold(){
+  var hs = await sb.from("households").select("id,name").order("created_at", { ascending:true }).limit(1);
+  if (hs.error) return fatal(hs.error.message);
+  if (!hs.data || !hs.data.length) return householdScreen();
+  HH = hs.data[0];
+
+  var bs = await sb.from("babies").select("id,name,birth_date")
+                   .eq("household_id", HH.id).order("created_at", { ascending:true }).limit(1);
+  if (bs.error) return fatal(bs.error.message);
+  if (!bs.data || !bs.data.length) {
+    var nb = await sb.from("babies").insert({ household_id:HH.id, name:"" }).select().single();
+    if (nb.error) return fatal(nb.error.message);
+    BABY = nb.data;
+  } else { BABY = bs.data[0]; }
+
+  showApp();
+  await queueFlush();
+  await loadEvents();
+  subscribeRealtime();
+}
+
+async function boot(){
+  var s = await sb.auth.getSession();
+  SESSION = s.data ? s.data.session : null;
+  if (!SESSION) return authScreen("in");
+
+  var p = await sb.from("profiles").select("user_id,activated")
+                  .eq("user_id", SESSION.user.id).maybeSingle();
+  if (p.error) return fatal(p.error.message);
+  PROFILE = p.data;
+  if (!PROFILE || !PROFILE.activated) return activateScreen();
+
+  await bootHousehold();
+}
+
+try {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession:true, autoRefreshToken:true }
+  });
+} catch (e) {
+  fatal("클라이언트를 초기화하지 못했습니다.");
+}
+if (sb) {
+  sb.auth.onAuthStateChange(function(evt){ if (evt === "SIGNED_OUT") location.reload(); });
+  boot().catch(function(e){ fatal((e && e.message) || "알 수 없는 오류"); });
+}
 })();
 </script>
 </body>
