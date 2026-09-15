@@ -190,6 +190,14 @@ input{font:inherit; color:inherit}
   background:var(--surface); border:1px solid var(--line); border-radius:12px;
   padding:16px; margin-bottom:9px; overflow-wrap:anywhere}
 
+.stepper{display:grid; grid-template-columns:auto 1fr auto; gap:9px; align-items:center}
+.step-b{border:1px solid var(--line); background:var(--surface); border-radius:12px;
+  padding:17px 0; min-width:68px; font-family:var(--mono); font-size:16px; font-weight:600}
+.step-b[disabled]{opacity:.35; cursor:default}
+.amt-v{text-align:center; font-family:var(--mono); font-variant-numeric:tabular-nums;
+  font-size:31px; font-weight:600; letter-spacing:-.02em; line-height:1.1}
+.amt-v small{font-size:14px; font-weight:400; color:var(--muted); margin-left:3px}
+
 .toast{position:fixed; left:50%; transform:translateX(-50%);
   bottom:calc(var(--bar) + 24px + env(safe-area-inset-bottom, 0px)); z-index:40;
   background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:24px;
@@ -411,6 +419,17 @@ function lastOf(kind){
   for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].k === kind) return EVENTS[i];
   return null;
 }
+// 대개 비슷한 양을 먹이므로, 마지막으로 기록한 분유량을 기본값으로 쓴다.
+function lastBottleMl(){
+  for (var i = 0; i < EVENTS.length; i++) {
+    var e = EVENTS[i];
+    if (e.k === "feed" && e.ml) {
+      var v = Math.round(e.ml / 10) * 10;
+      if (v >= 60 && v <= 200) return v;
+    }
+  }
+  return 120;
+}
 function runningSleep(){
   for (var i = 0; i < EVENTS.length; i++) if (EVENTS[i].k === "sleep" && !EVENTS[i].end) return EVENTS[i];
   return null;
@@ -570,7 +589,13 @@ function feedSheet(){
       '<button class="chip" data-v="R">오른쪽 젖</button>' +
       '<button class="chip" data-v="bottle">분유</button>' +
       '<button class="chip" data-v="pump">유축</button></div></div>' +
-    '<div class="fld" id="amt" hidden><label id="amt-l"></label>' +
+    '<div class="fld" id="amt-ml" hidden><label>얼마나 먹었나요</label>' +
+      '<div class="stepper">' +
+        '<button class="step-b" id="dec" aria-label="10 밀리리터 줄이기">&minus;10</button>' +
+        '<div class="amt-v"><span id="amtv">120</span><small>ml</small></div>' +
+        '<button class="step-b" id="inc" aria-label="10 밀리리터 늘리기">+10</button></div>' +
+      '<div class="chips" id="mlq" style="margin-top:9px"></div></div>' +
+    '<div class="fld" id="amt-min" hidden><label>얼마나 물렸나요 (분)</label>' +
       '<div class="chips" id="aq"></div>' +
       '<input class="num" id="av" type="number" inputmode="numeric" min="0" style="margin-top:7px"></div>' +
     '<div class="fld"><label>트림 · 게워냄</label><div class="toggles">' +
@@ -579,18 +604,49 @@ function feedSheet(){
     '<button class="save" id="go">기록하기</button>' +
     '<button class="ghost" id="skip">종류 없이 시각만 기록</button>',
     function(root){
-      var amt = root.querySelector("#amt"), aq = root.querySelector("#aq");
-      var av = root.querySelector("#av"), al = root.querySelector("#amt-l");
+      var amtMl = root.querySelector("#amt-ml"), amtMin = root.querySelector("#amt-min");
+      var aq = root.querySelector("#aq"), av = root.querySelector("#av");
+      var mlq = root.querySelector("#mlq"), amtv = root.querySelector("#amtv");
+      var dec = root.querySelector("#dec"), inc = root.querySelector("#inc");
+      var ML_MIN = 60, ML_MAX = 200, ML_STEP = 10;
+      var mlVal = lastBottleMl();
+
+      function paintMl(){
+        amtv.textContent = mlVal;
+        root.querySelectorAll("#mlq .chip").forEach(function(c){
+          c.classList.toggle("sel", parseInt(c.getAttribute("data-v"), 10) === mlVal);
+        });
+        dec.disabled = mlVal <= ML_MIN;
+        inc.disabled = mlVal >= ML_MAX;
+      }
+      function setMl(v){
+        mlVal = Math.max(ML_MIN, Math.min(ML_MAX, Math.round(v / ML_STEP) * ML_STEP));
+        paintMl();
+      }
+      mlq.innerHTML = [60,90,120,150,180].map(function(n){
+        return '<button class="chip sm" data-v="' + n + '">' + n + '</button>';
+      }).join("");
+      mlq.addEventListener("click", function(e){
+        var c = e.target.closest(".chip");
+        if (c) setMl(parseInt(c.getAttribute("data-v"), 10));
+      });
+      dec.addEventListener("click", function(){ setMl(mlVal - ML_STEP); });
+      inc.addEventListener("click", function(){ setMl(mlVal + ML_STEP); });
+      paintMl();
+
       chipGroup(root, "#fk .chip", function(v){
-        if (!v) { amt.hidden = true; return; }
-        amt.hidden = false;
-        var breast = v === "L" || v === "R";
-        al.textContent = breast ? "얼마나 물렸나요 (분)" : "얼마나 먹었나요 (ml)";
-        av.placeholder = breast ? "분" : "ml"; av.value = "";
-        aq.innerHTML = (breast ? [5,10,15,20,25] : [30,60,90,120,150]).map(function(n){
-          return '<button class="chip sm" data-v="' + n + '">' + n + '</button>';
-        }).join("");
-        chipGroup(root, "#aq .chip", function(n){ av.value = n || ""; });
+        amtMl.hidden = true; amtMin.hidden = true;
+        if (!v) return;
+        if (v === "L" || v === "R") {
+          amtMin.hidden = false;
+          av.placeholder = "분"; av.value = "";
+          aq.innerHTML = [5,10,15,20,25].map(function(n){
+            return '<button class="chip sm" data-v="' + n + '">' + n + '</button>';
+          }).join("");
+          chipGroup(root, "#aq .chip", function(n){ av.value = n || ""; });
+        } else {
+          amtMl.hidden = false;
+        }
       });
       root.querySelector("#burp").addEventListener("click", function(){ this.classList.toggle("sel"); });
       root.querySelector("#spit").addEventListener("click", function(){ this.classList.toggle("sel"); });
@@ -599,8 +655,12 @@ function feedSheet(){
         var ev = { k:"feed", t:Date.now() };
         if (m) {
           ev.m = m;
-          var n = parseInt(av.value, 10);
-          if (n > 0) { if (m === "L" || m === "R") ev.min = n; else ev.ml = n; }
+          if (m === "L" || m === "R") {
+            var n = parseInt(av.value, 10);
+            if (n > 0) ev.min = n;
+          } else {
+            ev.ml = mlVal;
+          }
         }
         if (root.querySelector("#burp").classList.contains("sel")) ev.burp = true;
         if (root.querySelector("#spit").classList.contains("sel")) ev.spit = true;
@@ -735,6 +795,12 @@ function settingsSheet(){
         if (!code) return;
         var r = await sb.rpc("redeem_code", { input_code: code });
         if (r.error) { toast(rpcMsg(r.error)); return; }
+        // 가입 키는 계정만 열어줄 뿐 어느 가정에도 넣지 않는다.
+        // 그걸 합류로 보고하면 아무 일도 없었는데 성공했다고 말하는 셈이 된다.
+        if (!r.data || r.data.type !== "join") {
+          toast("이건 가입용 관리자 키입니다. 가족에게 받은 초대 코드를 넣어 주세요");
+          return;
+        }
         closeSheet(); toast("합류했습니다"); await bootHousehold();
       });
       root.querySelector("#logout").addEventListener("click", async function(){
@@ -907,6 +973,9 @@ function householdScreen(){
         var r = await sb.rpc("redeem_code", { input_code: code });
         this.disabled = false;
         if (r.error) return fail(rpcMsg(r.error));
+        if (!r.data || r.data.type !== "join") {
+          return fail("이건 가입용 관리자 키입니다. 가족에게 받은 초대 코드를 넣어 주세요.");
+        }
         bootHousehold();
       });
     }
