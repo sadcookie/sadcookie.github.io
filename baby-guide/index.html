@@ -124,6 +124,7 @@ section > .wrap > h2 small{font-size:13px; color:var(--muted); font-weight:400}
 .tbl th,.tbl td{text-align:left; padding:9px 8px; border-bottom:1px solid var(--line); vertical-align:top}
 .tbl thead th{font-size:12.5px; color:var(--muted); font-weight:500}
 .tbl tbody th{font-weight:500; color:var(--ink-2); white-space:nowrap}
+.tbl td.mono,.tbl tbody td:first-child{white-space:nowrap}
 .tbl-scroll{overflow-x:auto}
 
 /* checklist */
@@ -164,6 +165,18 @@ details.faq .emoji{margin-right:6px}
 .stats small{display:block; font-size:11.5px; color:var(--muted)}
 .stats b{display:block; font-family:var(--mono); font-size:15px; margin-top:2px}
 .goal{font-weight:700; color:var(--sleep)}
+.ml{display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--feed-soft); border-radius:10px;
+  padding:9px 12px; margin:0 0 10px; font-size:14px}
+.ml b{font-family:var(--mono); color:var(--feed)}
+.ml a{margin-left:auto; font-size:12.5px}
+
+/* weight calculator */
+.calc{display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; font-size:14px}
+.calc input{width:88px; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:7px 10px}
+.calc-out{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px}
+.calc-out div{background:var(--feed-soft); border-radius:10px; padding:10px; text-align:center}
+.calc-out small{display:block; font-size:11.5px; color:var(--muted)}
+.calc-out b{display:block; font-family:var(--mono); font-size:16px; color:var(--feed); margin-top:2px}
 
 footer{padding:32px 0 48px; color:var(--muted); font-size:12.5px}
 footer p{margin:.5em 0}
@@ -193,6 +206,7 @@ footer p{margin:.5em 0}
     <a href="#rules">꼭 지킬 것</a>
     <a href="#faq">이럴 땐</a>
     <a href="#weeks">주차별</a>
+    <a href="#ml">먹는 양</a>
     <a href="#shush">쉬-토닥</a>
     <a href="#doctor">병원</a>
   </div>
@@ -504,6 +518,7 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w0" aria-labelledby="tab-w0">
       <h3>0~2주 · <span class="goal">일단 잘 먹이기</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>2~3시간</b></div><div><small>깨어 있는 시간</small><b>30~45분</b></div><div><small>하루 수유</small><b>8~12회</b></div></div>
+      <p class="ml">🍼 분유 1회 <b>생후 1일 5~15ml → 2주 60~90ml</b> <a href="#ml">먹는 양 자세히</a></p>
       <ul>
         <li><b>루틴보다 수유가 우선.</b> 배고파하면 먹이고, 낮에 3시간 넘게 자면 깨워서 먹입니다.</li>
         <li>먹다가 잠드는 일이 많습니다. <b>E.A.S.Y.를 완벽하게 지키려 하지 마세요.</b></li>
@@ -516,6 +531,7 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w1" aria-labelledby="tab-w1" hidden>
       <h3>3~4주 · <span class="goal">순서 잡기 시작</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>2.5~3시간</b></div><div><small>깨어 있는 시간</small><b>45~60분</b></div><div><small>하루 수유</small><b>8~9회</b></div></div>
+      <p class="ml">🍼 분유 1회 <b>90~120ml</b> · 하루 <b>600~750ml</b> <a href="#ml">먹는 양 자세히</a></p>
       <ul>
         <li>체중을 회복했다면 <b>먹기 → 기저귀·눈 맞추기 → 재우기</b> 순서를 의식적으로 반복합니다.</li>
         <li>먹다 잠들면 기저귀나 트림으로 <b>살짝 깨운 뒤</b> 눕힙니다.</li>
@@ -528,6 +544,7 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w2" aria-labelledby="tab-w2" hidden>
       <h3>5~8주 · <span class="goal">패턴이 보이기 시작</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>3시간</b></div><div><small>깨어 있는 시간</small><b>60~75분</b></div><div><small>밤 연속 잠</small><b>3~4시간</b></div></div>
+      <p class="ml">🍼 분유 1회 <b>120~150ml</b> · 하루 <b>700~850ml</b> <a href="#ml">먹는 양 자세히</a></p>
       <ul>
         <li>대부분 <b>3시간 주기</b>가 어느 정도 자리를 잡습니다.</li>
         <li><b>꿈나무 수유</b>를 본격적으로: 부모가 자기 전(22~23시) 잠든 아기에게 한 번 더.</li>
@@ -540,10 +557,12 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w3" aria-labelledby="tab-w3" hidden>
       <h3>9~12주 · <span class="goal">밤잠 늘리기</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>3~3.5시간</b></div><div><small>깨어 있는 시간</small><b>75~90분</b></div><div><small>밤 연속 잠</small><b>4~6시간</b></div></div>
+      <p class="ml">🍼 분유 1회 <b>150~180ml</b> · 하루 <b>750~900ml</b> <a href="#ml">먹는 양 자세히</a></p>
       <ul>
         <li>놀이(A)가 제대로 된 활동이 됩니다. 터미타임, 모빌, 책 보기.</li>
         <li>밤에 깨면 <b>바로 먹이지 말고</b> 쉬-토닥으로 먼저 달래 봅니다. 배고픈 게 아니면 다시 잠들기도 합니다.</li>
         <li><b>뒤집기 조짐이 보이면 속싸개를 끊습니다.</b> 팔을 한쪽씩 빼는 식으로.</li>
+        <li>한 번에 먹는 양이 늘면 <b>저녁 몰아 먹이기 간격을 조금씩 벌려</b> 갑니다. 4개월 무렵에는 저녁 수유가 한 번으로 합쳐집니다.</li>
       </ul>
       <div class="note">성장 급등기 <b>3개월 무렵</b>. 이 무렵부터 쉬-토닥이 오히려 아기를 깨울 수 있습니다.</div>
     </div>
@@ -551,8 +570,11 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w4" aria-labelledby="tab-w4" hidden>
       <h3>13~16주 · <span class="goal">4시간 E.A.S.Y.로</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>3.5~4시간</b></div><div><small>깨어 있는 시간</small><b>90~120분</b></div><div><small>낮잠</small><b>3~4번</b></div></div>
+      <p class="ml">🍼 분유 1회 <b>180~210ml</b> · 하루 <b>800~950ml</b> <a href="#ml">먹는 양 자세히</a></p>
       <ul>
         <li>한 번에 먹는 양이 늘면서 <b>4시간 주기</b>로. 하루 15~30분씩 간격을 늘려 갑니다.</li>
+        <li><b>저녁 몰아 먹이기는 1번으로 줄입니다.</b> 17시·19시 두 번 먹이던 것을 <b>19시 무렵 한 번</b> 충분히 먹이고 재웁니다. <b>꿈나무 수유(22~23시)는 계속</b>합니다.
+          <div class="note">예) 07시 · 11시 · 15시 · 19시 수유 → 19:30 밤잠 → 22~23시 꿈나무 수유</div></li>
         <li>약 4개월부터는 쉬-토닥 대신 <b>안았다 눕히기(PU/PD)</b>: 울면 안아서 달래고, 진정되면 바로 눕히기를 반복합니다.</li>
       </ul>
       <div class="note">3~4개월 <b>수면 퇴행</b>: 잘 자던 아기가 다시 자주 깰 수 있습니다. 대개 일시적입니다.</div>
@@ -562,16 +584,89 @@ footer p{margin:.5em 0}
       <h3>한눈에 보기</h3>
       <div class="tbl-scroll">
       <table class="tbl">
-        <thead><tr><th>시기</th><th>수유 간격</th><th>깨어 있는 시간</th><th>목표</th></tr></thead>
+        <thead><tr><th>시기</th><th>수유 간격</th><th>깨어 있기</th><th>1회 분유</th></tr></thead>
         <tbody>
-          <tr><td>0~2주</td><td class="mono">2~3h</td><td class="mono">30~45분</td><td>잘 먹이기, 체중 회복</td></tr>
-          <tr><td>3~4주</td><td class="mono">2.5~3h</td><td class="mono">45~60분</td><td>E.A.S.Y. 순서 익히기</td></tr>
-          <tr><td>5~8주</td><td class="mono">3h</td><td class="mono">60~75분</td><td>밤낮 구분, 꿈나무 수유</td></tr>
-          <tr><td>9~12주</td><td class="mono">3~3.5h</td><td class="mono">75~90분</td><td>밤잠 늘리기</td></tr>
-          <tr><td>13~16주</td><td class="mono">3.5~4h</td><td class="mono">90~120분</td><td>4시간 E.A.S.Y.</td></tr>
+          <tr><td>0~2주</td><td class="mono">2~3h</td><td class="mono">30~45분</td><td class="mono">5~90ml</td></tr>
+          <tr><td>3~4주</td><td class="mono">2.5~3h</td><td class="mono">45~60분</td><td class="mono">90~120ml</td></tr>
+          <tr><td>5~8주</td><td class="mono">3h</td><td class="mono">60~75분</td><td class="mono">120~150ml</td></tr>
+          <tr><td>9~12주</td><td class="mono">3~3.5h</td><td class="mono">75~90분</td><td class="mono">150~180ml</td></tr>
+          <tr><td>13~16주</td><td class="mono">3.5~4h</td><td class="mono">90~120분</td><td class="mono">180~210ml</td></tr>
         </tbody>
       </table>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 먹는 양 ================= -->
+<section id="ml">
+  <div class="wrap">
+    <h2>🍼 먹는 양 (ml)</h2>
+    <p class="sec-sub">분유 기준 평균 범위입니다. 아기마다 차이가 크니 <b>분유통 표와 소아과 안내가 우선</b>입니다.</p>
+
+    <div class="card">
+      <h3>주차별 분유량</h3>
+      <div class="tbl-scroll">
+      <table class="tbl">
+        <thead><tr><th>시기</th><th>1회 양</th><th>하루 횟수</th><th>하루 총량</th></tr></thead>
+        <tbody>
+          <tr><td>생후 1일</td><td class="mono">5~15ml</td><td class="mono">8~12회</td><td>위가 구슬만 합니다</td></tr>
+          <tr><td>생후 2~3일</td><td class="mono">15~30ml</td><td class="mono">8~12회</td><td></td></tr>
+          <tr><td>생후 4~7일</td><td class="mono">30~60ml</td><td class="mono">8~10회</td><td></td></tr>
+          <tr><td>2주</td><td class="mono">60~90ml</td><td class="mono">8~10회</td><td class="mono">500~650ml</td></tr>
+          <tr><td>3~4주</td><td class="mono">90~120ml</td><td class="mono">7~8회</td><td class="mono">600~750ml</td></tr>
+          <tr><td>5~8주</td><td class="mono">120~150ml</td><td class="mono">6~7회</td><td class="mono">700~850ml</td></tr>
+          <tr><td>9~12주</td><td class="mono">150~180ml</td><td class="mono">5~6회</td><td class="mono">750~900ml</td></tr>
+          <tr><td>13~16주</td><td class="mono">180~210ml</td><td class="mono">5회</td><td class="mono">800~950ml</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note warn">하루 총량은 <b>1,000ml를 넘지 않게</b> 합니다. 그 이상 먹으려 하면 소아과와 상의하세요.</div>
+    </div>
+
+    <div class="card">
+      <h3>몸무게로 계산하기</h3>
+      <p style="color:var(--ink-2); font-size:14px">하루 총량은 대략 <b>몸무게(kg) × 150ml</b>입니다 (범위 120~180ml).</p>
+      <div class="calc">
+        <label for="wt">몸무게</label>
+        <input type="number" id="wt" inputmode="decimal" min="1.5" max="10" step="0.1" placeholder="4.2"> kg
+        <label for="feeds">하루 수유</label>
+        <input type="number" id="feeds" inputmode="numeric" min="4" max="12" step="1" value="8"> 회
+      </div>
+      <div class="calc-out" id="calcOut" aria-live="polite" hidden>
+        <div><small>하루 총량</small><b id="calcDay"></b></div>
+        <div><small>1회 양</small><b id="calcFeed"></b></div>
+      </div>
+      <p class="note" id="calcMsg">몸무게를 넣으면 계산됩니다.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>🤱 모유 수유라면</h3>
+        <ul>
+          <li>양을 잴 수 없으니 <b>횟수와 신호</b>로 봅니다. 하루 8~12회, 한쪽을 충분히 비우게 먹입니다.</li>
+          <li>유축 모유를 젖병으로 줄 때는 1회 <b>60~120ml</b> 정도입니다. 모유는 1~6개월 동안 <b>1회 양이 크게 늘지 않는</b> 경우가 많습니다.</li>
+          <li>혼합 수유는 모유 뒤에 부족한 만큼만 분유로 보충합니다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>👍 잘 먹고 있다는 신호</h3>
+        <ul class="check">
+          <li>소변 기저귀 <b>하루 6장 이상</b>, 소변 색이 옅습니다.</li>
+          <li>생후 2주까지 <b>출생 체중 회복</b>, 이후 <b>하루 20~30g</b>씩 늘어납니다.</li>
+          <li>먹고 나면 손이 풀리고 편안해 보입니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>⚠️ 억지로 다 먹이지 않기</h3>
+      <ul>
+        <li>표의 양은 <b>평균</b>입니다. 고개를 돌리거나, 젖꼭지를 밀어내거나, 빠는 힘이 약해지면 <b>배부른 것</b>이니 남겨도 괜찮습니다.</li>
+        <li>너무 많이 먹이면 자주 토하고, 가스가 차고, 보챌 수 있습니다. 게워 내는 양이 많으면 1회 양을 조금 줄이고 트림을 자주 시킵니다.</li>
+        <li>우는 걸 모두 배고픔으로 보지 마세요. <a href="#f-wake">울음 원인 보기</a></li>
+        <li>분유는 <b>분유통의 물·가루 비율</b>을 정확히 지킵니다. 진하거나 묽게 타지 않습니다.</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -713,6 +808,36 @@ footer p{margin:.5em 0}
     } catch (e) {}
     applyBirth(birth.value);
   });
+
+  // 몸무게로 분유량 계산
+  var ML_PER_KG = { low: 120, mid: 150, high: 180 };
+  var DAILY_MAX_ML = 1000;
+  var wt = document.getElementById('wt');
+  var feeds = document.getElementById('feeds');
+  var calcOut = document.getElementById('calcOut');
+  var calcMsg = document.getElementById('calcMsg');
+
+  function round10(n) { return Math.round(n / 10) * 10; }
+
+  function calc() {
+    var kg = parseFloat(wt.value);
+    var n = parseInt(feeds.value, 10);
+    if (!(kg >= 1.5 && kg <= 10) || !(n >= 4 && n <= 12)) {
+      calcOut.hidden = true;
+      calcMsg.textContent = wt.value ? '몸무게는 1.5~10kg, 수유는 4~12회로 넣어 주세요.' : '몸무게를 넣으면 계산됩니다.';
+      return;
+    }
+    var low = Math.min(round10(kg * ML_PER_KG.low), DAILY_MAX_ML);
+    var mid = Math.min(round10(kg * ML_PER_KG.mid), DAILY_MAX_ML);
+    var high = Math.min(round10(kg * ML_PER_KG.high), DAILY_MAX_ML);
+    document.getElementById('calcDay').textContent = low + '~' + high + 'ml';
+    document.getElementById('calcFeed').textContent = '약 ' + round10(mid / n) + 'ml';
+    calcOut.hidden = false;
+    calcMsg.textContent = '하루 ' + mid + 'ml를 ' + n + '회로 나눈 값입니다. 아기가 원하는 만큼 ±30ml는 괜찮습니다.' +
+      (high >= DAILY_MAX_ML ? ' 하루 1,000ml를 넘기지 않게 합니다.' : '');
+  }
+  wt.addEventListener('input', calc);
+  feeds.addEventListener('input', calc);
 
   // 목차에서 현재 섹션 표시
   var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
