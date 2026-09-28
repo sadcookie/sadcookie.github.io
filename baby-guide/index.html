@@ -168,7 +168,9 @@ details.faq .emoji{margin-right:6px}
 .ml{display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--feed-soft); border-radius:10px;
   padding:9px 12px; margin:0 0 10px; font-size:14px}
 .ml b{font-family:var(--mono); color:var(--feed)}
-.ml a{margin-left:auto; font-size:12.5px}
+.ml .ml-links{margin-left:auto; font-size:12.5px}
+.ml.bf{background:var(--diaper-soft)}
+.ml.bf b{color:var(--diaper)}
 
 /* weight calculator */
 .calc{display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; font-size:14px}
@@ -207,6 +209,7 @@ footer p{margin:.5em 0}
     <a href="#faq">이럴 땐</a>
     <a href="#weeks">주차별</a>
     <a href="#ml">먹는 양</a>
+    <a href="#bf">모유 수유</a>
     <a href="#shush">쉬-토닥</a>
     <a href="#doctor">병원</a>
   </div>
@@ -238,6 +241,7 @@ footer p{margin:.5em 0}
         <li><b>3시간 = 수유 시작 → 다음 수유 시작.</b> 먹는 시간도 포함합니다.</li>
         <li><b>먹고 바로 재우지 않습니다.</b> 젖이나 젖병을 물려야만 잠드는 습관을 막기 위해서입니다.</li>
         <li>E.A.S.Y.는 <b>순서(routine)</b>이지 <b>시간표(schedule)</b>가 아닙니다. 2시간 30분 만에 배고파하면 먹입니다.</li>
+        <li><b>모유 수유</b>라면 처음 4~6주는 간격보다 <b>배고파할 때마다</b> 먹이는 게 먼저입니다. 순서만 지키세요. <a href="#bf">모유 수유라면</a></li>
       </ul>
     </div>
     <div class="note key"><b>하루의 기준점은 아침 7시.</b> 낮 일정이 흐트러져도 다음 날 아침 7시 기상과 수유로 다시 맞추면 됩니다.</div>
@@ -271,6 +275,7 @@ footer p{margin:.5em 0}
         <li class="night"><time>05:30</time><div class="what"><span><span class="tag t-e">E</span>새벽 수유 (깨면)</span><small>다시 재우고 7시에 하루 시작</small></div></li>
       </ol>
       <div class="note">하루 <b>8~9회 수유</b>입니다. 이 시기에 필요한 횟수(8~12회)에 맞습니다.</div>
+      <div class="note">🤱 <b>모유 수유</b>라면 간격이 <b>2~2.5시간</b>으로 더 짧고 횟수가 10~12회로 늘어도 정상입니다. 시각은 아기에게 맞추고 <b>먹기 → 깨어 있기 → 잠</b> 순서만 지키세요.</div>
     </div>
 
     <div class="card">
@@ -518,7 +523,8 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w0" aria-labelledby="tab-w0">
       <h3>0~2주 · <span class="goal">일단 잘 먹이기</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>2~3시간</b></div><div><small>깨어 있는 시간</small><b>30~45분</b></div><div><small>하루 수유</small><b>8~12회</b></div></div>
-      <p class="ml">🍼 분유 1회 <b>생후 1일 5~15ml → 2주 60~90ml</b> <a href="#ml">먹는 양 자세히</a></p>
+      <p class="ml">🍼 분유 1회 <b>생후 1일 5~15ml → 2주 60~90ml</b> <span class="ml-links"><a href="#ml">분유량</a> · <a href="#bf">모유라면</a></span></p>
+      <p class="ml bf">🤱 모유 <b>배고파할 때마다</b> · 하루 <b>8~12회</b> (1.5~3시간)</p>
       <ul>
         <li><b>루틴보다 수유가 우선.</b> 배고파하면 먹이고, 낮에 3시간 넘게 자면 깨워서 먹입니다.</li>
         <li>먹다가 잠드는 일이 많습니다. <b>E.A.S.Y.를 완벽하게 지키려 하지 마세요.</b></li>
@@ -531,7 +537,8 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w1" aria-labelledby="tab-w1" hidden>
       <h3>3~4주 · <span class="goal">순서 잡기 시작</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>2.5~3시간</b></div><div><small>깨어 있는 시간</small><b>45~60분</b></div><div><small>하루 수유</small><b>8~9회</b></div></div>
-      <p class="ml">🍼 분유 1회 <b>90~120ml</b> · 하루 <b>600~750ml</b> <a href="#ml">먹는 양 자세히</a></p>
+      <p class="ml">🍼 분유 1회 <b>90~120ml</b> · 하루 <b>600~750ml</b> <span class="ml-links"><a href="#ml">분유량</a> · <a href="#bf">모유라면</a></span></p>
+      <p class="ml bf">🤱 모유 <b>2~3시간</b> · 하루 <b>8~12회</b> (간격 고정 X, 순서만)</p>
       <ul>
         <li>체중을 회복했다면 <b>먹기 → 기저귀·눈 맞추기 → 재우기</b> 순서를 의식적으로 반복합니다.</li>
         <li>먹다 잠들면 기저귀나 트림으로 <b>살짝 깨운 뒤</b> 눕힙니다.</li>
@@ -544,7 +551,8 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w2" aria-labelledby="tab-w2" hidden>
       <h3>5~8주 · <span class="goal">패턴이 보이기 시작</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>3시간</b></div><div><small>깨어 있는 시간</small><b>60~75분</b></div><div><small>밤 연속 잠</small><b>3~4시간</b></div></div>
-      <p class="ml">🍼 분유 1회 <b>120~150ml</b> · 하루 <b>700~850ml</b> <a href="#ml">먹는 양 자세히</a></p>
+      <p class="ml">🍼 분유 1회 <b>120~150ml</b> · 하루 <b>700~850ml</b> <span class="ml-links"><a href="#ml">분유량</a> · <a href="#bf">모유라면</a></span></p>
+      <p class="ml bf">🤱 모유 <b>2~3시간</b> · 하루 <b>8~10회</b> (6주 무렵부터 조금씩 간격 맞추기)</p>
       <ul>
         <li>대부분 <b>3시간 주기</b>가 어느 정도 자리를 잡습니다.</li>
         <li><b>꿈나무 수유</b>를 본격적으로: 부모가 자기 전(22~23시) 잠든 아기에게 한 번 더.</li>
@@ -557,7 +565,8 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w3" aria-labelledby="tab-w3" hidden>
       <h3>9~12주 · <span class="goal">밤잠 늘리기</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>3~3.5시간</b></div><div><small>깨어 있는 시간</small><b>75~90분</b></div><div><small>밤 연속 잠</small><b>4~6시간</b></div></div>
-      <p class="ml">🍼 분유 1회 <b>150~180ml</b> · 하루 <b>750~900ml</b> <a href="#ml">먹는 양 자세히</a></p>
+      <p class="ml">🍼 분유 1회 <b>150~180ml</b> · 하루 <b>750~900ml</b> <span class="ml-links"><a href="#ml">분유량</a> · <a href="#bf">모유라면</a></span></p>
+      <p class="ml bf">🤱 모유 <b>2.5~3.5시간</b> · 하루 <b>7~9회</b></p>
       <ul>
         <li>놀이(A)가 제대로 된 활동이 됩니다. 터미타임, 모빌, 책 보기.</li>
         <li>밤에 깨면 <b>바로 먹이지 말고</b> 쉬-토닥으로 먼저 달래 봅니다. 배고픈 게 아니면 다시 잠들기도 합니다.</li>
@@ -570,7 +579,8 @@ footer p{margin:.5em 0}
     <div class="card panel" role="tabpanel" id="w4" aria-labelledby="tab-w4" hidden>
       <h3>13~16주 · <span class="goal">4시간 E.A.S.Y.로</span></h3>
       <div class="stats"><div><small>수유 간격</small><b>3.5~4시간</b></div><div><small>깨어 있는 시간</small><b>90~120분</b></div><div><small>낮잠</small><b>3~4번</b></div></div>
-      <p class="ml">🍼 분유 1회 <b>180~210ml</b> · 하루 <b>800~950ml</b> <a href="#ml">먹는 양 자세히</a></p>
+      <p class="ml">🍼 분유 1회 <b>180~210ml</b> · 하루 <b>800~950ml</b> <span class="ml-links"><a href="#ml">분유량</a> · <a href="#bf">모유라면</a></span></p>
+      <p class="ml bf">🤱 모유 <b>3~4시간</b> · 하루 <b>6~8회</b> (4시간이 안 되면 3~3.5시간도 괜찮음)</p>
       <ul>
         <li>한 번에 먹는 양이 늘면서 <b>4시간 주기</b>로. 하루 15~30분씩 간격을 늘려 갑니다.</li>
         <li><b>저녁 몰아 먹이기는 1번으로 줄입니다.</b> 17시·19시 두 번 먹이던 것을 <b>19시 무렵 한 번</b> 충분히 먹이고 재웁니다. <b>꿈나무 수유(22~23시)는 계속</b>합니다.
@@ -642,11 +652,11 @@ footer p{margin:.5em 0}
 
     <div class="grid2">
       <div class="card">
-        <h3>🤱 모유 수유라면</h3>
+        <h3>🤱 모유·혼합 수유라면</h3>
         <ul>
-          <li>양을 잴 수 없으니 <b>횟수와 신호</b>로 봅니다. 하루 8~12회, 한쪽을 충분히 비우게 먹입니다.</li>
-          <li>유축 모유를 젖병으로 줄 때는 1회 <b>60~120ml</b> 정도입니다. 모유는 1~6개월 동안 <b>1회 양이 크게 늘지 않는</b> 경우가 많습니다.</li>
-          <li>혼합 수유는 모유 뒤에 부족한 만큼만 분유로 보충합니다.</li>
+          <li>위 표는 <b>분유 기준</b>입니다. 모유는 양 대신 <b>횟수와 신호</b>로 봅니다.</li>
+          <li>혼합 수유는 <b>모유를 먼저</b> 먹이고, 부족한 만큼만 분유로 보충합니다.</li>
+          <li><a href="#bf">모유 수유 때 챙길 것 보기</a></li>
         </ul>
       </div>
       <div class="card">
@@ -666,6 +676,100 @@ footer p{margin:.5em 0}
         <li>너무 많이 먹이면 자주 토하고, 가스가 차고, 보챌 수 있습니다. 게워 내는 양이 많으면 1회 양을 조금 줄이고 트림을 자주 시킵니다.</li>
         <li>우는 걸 모두 배고픔으로 보지 마세요. <a href="#f-wake">울음 원인 보기</a></li>
         <li>분유는 <b>분유통의 물·가루 비율</b>을 정확히 지킵니다. 진하거나 묽게 타지 않습니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 모유 수유 ================= -->
+<section id="bf">
+  <div class="wrap">
+    <h2>🤱 모유 수유라면</h2>
+    <p class="sec-sub">E.A.S.Y.의 <b>순서</b>는 그대로 쓰고, <b>간격</b>은 아기와 젖양에 맞춥니다.</p>
+
+    <div class="card">
+      <h3>왜 3시간 간격이 안 맞을 수 있나</h3>
+      <ul>
+        <li><b>많이 빼낼수록 많이 만들어집니다.</b> 가슴이 오래 차 있으면 몸이 생산을 줄입니다. 젖양이 자리 잡는 <b>처음 약 6주</b>에 간격을 억지로 늘리면 젖양이 적게 자리 잡을 수 있습니다.</li>
+        <li><b>소화가 빠릅니다.</b> 모유는 1.5~2시간이면 대부분 소화되어 분유보다 일찍 배고파합니다.</li>
+        <li><b>양을 잴 수 없고</b>, 엄마마다 가슴이 한 번에 담을 수 있는 양이 달라서 원래 자주 먹어야 하는 아기도 있습니다.</li>
+      </ul>
+      <div class="note key">호그의 3시간은 <b>수유 시작 → 다음 수유 시작</b>이라 실제 쉬는 시간은 2시간 남짓입니다. 모유라면 <b>"2~3시간 간격"</b>으로 느슨하게 보세요.</div>
+    </div>
+
+    <div class="card">
+      <h3>시기별로 이렇게</h3>
+      <ul class="tl">
+        <li><time>0~2주</time><div class="what"><span class="mono">1.5~3시간 · 하루 8~12회</span><small><b>배고파할 때마다.</b> 낮에 3시간, 밤에 4시간 넘게 자면 깨워서 먹이기</small></div></li>
+        <li><time>3~6주</time><div class="what"><span class="mono">2~3시간 · 하루 8~12회</span><small>순서(먹기 → 깨어 있기 → 잠)만 지키고, 간격은 고정하지 않기</small></div></li>
+        <li><time>6주~<br>3개월</time><div class="what"><span class="mono">2.5~3.5시간 · 하루 7~10회</span><small>체중이 잘 늘면 조금씩 간격 맞추기</small></div></li>
+        <li><time>3~4<br>개월</time><div class="what"><span class="mono">3~4시간 · 하루 6~8회</span><small>4시간이 안 되면 3~3.5시간 E.A.S.Y.도 괜찮음</small></div></li>
+      </ul>
+      <p style="font-size:13.5px; color:var(--ink-2)">밤에 4시간 넘게 자기 시작하는 것은 <b>체중이 잘 늘고 소아과에서 괜찮다고 할 때</b>부터입니다.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>👄 젖 물리기 확인</h3>
+        <ul class="check">
+          <li>입을 <b>크게</b> 벌리고, 아랫입술이 <b>바깥으로 뒤집혀</b> 있습니다.</li>
+          <li>젖꼭지만이 아니라 <b>유륜까지 깊이</b>, 특히 아래쪽을 더 많이 뭅니다.</li>
+          <li>"꿀꺽" <b>삼키는 소리</b>가 규칙적으로 들리고, 쩝쩝·딸깍 소리가 나지 않습니다.</li>
+          <li>첫 며칠 뒤에도 <b>계속 아프면</b> 물리는 자세 문제일 수 있습니다. 도움을 받으세요.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>👍 잘 먹고 있다는 신호</h3>
+        <ul class="check">
+          <li>소변 기저귀 <b>하루 6장 이상</b>, 생후 4일 이후 <b>노란 변</b>.</li>
+          <li>생후 2주까지 <b>출생 체중 회복</b>, 이후 <b>하루 20~30g</b>씩 증가.</li>
+          <li>먹고 나면 손이 풀리고 편안해 보이며, 가슴이 먹기 전보다 부드러워집니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>수유할 때 챙길 것</h3>
+      <ul>
+        <li><b>한쪽을 충분히</b> 먹인 뒤 다른 쪽으로 옮깁니다. 뒤에 나오는 젖(후유)이 더 기름져 배가 오래 부릅니다. 다음 수유는 <b>마지막에 먹인 쪽부터</b>.</li>
+        <li><b>저녁 몰아 먹기·성장 급등기</b>(7~10일, 3주, 6주, 3개월 무렵)에 자주 먹으려 하면 <b>맞춰 주세요.</b> 젖양을 늘리려는 자연스러운 행동입니다.</li>
+        <li><b>밤중 수유를 너무 일찍 끊지 않습니다.</b> 밤에는 젖을 만드는 호르몬이 더 많이 나옵니다.</li>
+        <li><b>꿈나무 수유</b>는 모유로도 할 수 있습니다. 잠든 아기를 안아 젖을 물리면 됩니다.</li>
+        <li><b>공갈젖꼭지·젖병</b>은 수유가 자리 잡은 <b>3~4주 이후</b>에 시작하는 게 좋습니다. 젖꼭지 혼동을 줄여 줍니다.</li>
+        <li><b>비타민 D</b>: 모유만 먹는 아기는 생후 초기부터 하루 400IU 보충을 권합니다. 소아과에서 확인하세요.</li>
+      </ul>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>🧊 유축 모유 보관</h3>
+        <div class="tbl-scroll"><table class="tbl"><tbody>
+          <tr><th>실온 (25℃ 이하)</th><td>4시간</td></tr>
+          <tr><th>냉장 (4℃)</th><td>4일</td></tr>
+          <tr><th>냉동 (-18℃)</th><td>6개월 권장, 최대 12개월</td></tr>
+          <tr><th>해동한 모유</th><td>24시간 안에, 다시 얼리지 않기</td></tr>
+          <tr><th>먹다 남은 모유</th><td>2시간 안에 먹이고 버리기</td></tr>
+        </tbody></table></div>
+        <p style="font-size:13.5px; color:var(--ink-2)">데울 때는 <b>따뜻한 물에 중탕</b>합니다. 전자레인지는 속만 뜨거워질 수 있어 쓰지 않습니다. 젖병으로 줄 때 1회 <b>60~120ml</b> 정도이고, 모유는 1~6개월 동안 1회 양이 크게 늘지 않는 경우가 많습니다.</p>
+      </div>
+      <div class="card">
+        <h3>🙋 엄마 몸 관리</h3>
+        <ul>
+          <li>목마를 때마다 <b>물</b>을 마시고, 끼니를 거르지 않습니다. 수유 자리에 물병을 두세요.</li>
+          <li>커피는 <b>하루 1~2잔</b> 정도까지. 술은 피하는 게 좋습니다.</li>
+          <li>약을 먹어야 하면 <b>수유 중이라고 꼭 말하고</b> 처방받습니다.</li>
+          <li>밤중 수유가 모유라서 대신해 줄 수 없다면, 배우자가 <b>트림·기저귀·재우기</b>를 맡아 엄마가 바로 다시 잘 수 있게 합니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card danger">
+      <h3>🏥 이럴 땐 도움을 받으세요</h3>
+      <ul class="check">
+        <li>가슴에 <b>붉고 뜨겁고 아픈 멍울</b>이 생기고 <b>열·몸살 기운</b>이 있을 때 (유선염일 수 있음) → 병원</li>
+        <li>젖꼭지가 <b>갈라지거나 피가 나고</b> 수유 때마다 심하게 아플 때</li>
+        <li>아기 소변이 줄거나, 체중이 잘 늘지 않거나, 황달이 심해질 때 → 소아과</li>
+        <li>젖 물리기가 계속 어려울 때 → 조리원·보건소·<b>국제모유수유전문가(IBCLC)</b> 상담</li>
       </ul>
     </div>
   </div>
